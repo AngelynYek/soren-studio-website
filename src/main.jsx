@@ -9,19 +9,24 @@ const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=forma
 const offers = productsByGroup('offers');
 const icons = productsByGroup('icons');
 const autumnProducts = productsByGroup('autumn');
+const mensProducts = productsByGroup('men');
 
-function Header({ bagCount, onShowNewCollection, onShowHome }) {
+function Header({ bagCount, onShowNewCollection, onShowMen, onShowHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const openNewCollection = () => {
     setMenuOpen(false);
     onShowNewCollection();
+  };
+  const openMensCollection = () => {
+    setMenuOpen(false);
+    onShowMen();
   };
   return <>
     <div className="announcement">10% discount when subscribing to our newsletter</div>
     <header className="header">
       <button className="icon-button mobile-menu" aria-label="Open menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
       <nav className={`nav nav-left ${menuOpen ? 'nav-open' : ''}`} aria-label="Main navigation">
-        <button type="button" className="navigation-button nav-link" onClick={openNewCollection}>New</button><span className="nav-static">Men</span><span className="nav-static">Women</span><span className="nav-static">Accessories</span>
+        <button type="button" className="navigation-button nav-link" onClick={openNewCollection}>New</button><button type="button" className="navigation-button nav-link" onClick={openMensCollection}>Men</button><span className="nav-static">Women</span><span className="nav-static">Accessories</span>
       </nav>
       <button type="button" className="wordmark wordmark-button" onClick={onShowHome} aria-label="Soren Studio home">SOREN</button>
       <div className="header-actions"><button className="icon-button search-button" aria-label="Search"><Search /></button><button className="icon-button account-button" aria-label="Account"><UserRound /></button><button className="icon-button bag-button" aria-label={`Shopping bag, ${bagCount} items`}><ShoppingBag />{bagCount > 0 && <span className="bag-count">{bagCount}</span>}</button></div>
@@ -60,7 +65,7 @@ function Footer({ onShowNewCollection, onShowHome }) {
   return <footer className="footer"><div className="footer-brand"><button type="button" className="wordmark wordmark-button" onClick={onShowHome}>SOREN</button><p>Timeless silhouettes and considered essentials crafted for the modern wardrobe. Designed to endure beyond seasons.</p><div className="socials"><a href="#instagram" aria-label="Instagram"><Instagram size={16} /></a><a href="#facebook" aria-label="Facebook"><Facebook size={15} /></a></div></div><div className="footer-column"><h3>Explore</h3><button type="button" className="navigation-button footer-link" onClick={onShowNewCollection}>New arrivals</button><a href="#offers">Shop all</a><a href="#essentials">Our story</a></div><div className="footer-column"><h3>Client care</h3><a href="#shipping">Shipping & returns</a><a href="#faq">FAQs</a><a href="#contact">Contact us</a></div><div className="footer-column"><h3>Find us</h3><p>Monday – Friday<br />9am – 5pm EST</p><a href="mailto:hello@soren.studio">hello@soren.studio</a></div><div className="footer-bottom"><span>© 2025 Soren Studio. All rights reserved.</span><div><a href="#privacy">Privacy</a><a href="#terms">Terms</a></div><span>Made with intention.</span></div></footer>;
 }
 
-function AutumnCollectionPage({ bagCount, onShowNewCollection, onShowHome, onShowProduct }) {
+function BackToTop() {
   const [showBackToTop, setShowBackToTop] = useState(false);
   useEffect(() => {
     const updateBackToTop = () => setShowBackToTop(window.scrollY > 360);
@@ -69,10 +74,16 @@ function AutumnCollectionPage({ bagCount, onShowNewCollection, onShowHome, onSho
     return () => window.removeEventListener('scroll', updateBackToTop);
   }, []);
 
-  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><main className="collection-page"><section className="collection-listing-heading"><p className="eyebrow">New</p><h1>Autumn collection</h1><p>Thoughtful layers and timeless pieces for the season ahead.</p></section><section className="collection-product-list" aria-label="Autumn collection products"><ProductGrid items={autumnProducts} onShowProduct={onShowProduct} label="New season" /></section></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} />{showBackToTop && <button className="back-to-top" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Back to top <ArrowUp size={14} /></button>}</div>;
+  if (!showBackToTop) return null;
+  return <button className="back-to-top" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}>Back to top <ArrowUp size={14} /></button>;
 }
 
-function ProductPage({ item, bagCount, onShowNewCollection, onShowHome, onAdd }) {
+function CollectionPage({ bagCount, onShowNewCollection, onShowMen, onShowHome, onShowProduct, items, eyebrow, title, description, label }) {
+
+  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={onShowNewCollection} onShowMen={onShowMen} onShowHome={onShowHome} /><main className="collection-page"><section className="collection-listing-heading"><p className="eyebrow">{eyebrow}</p><h1>{title}</h1><p>{description}</p></section><section className="collection-product-list" aria-label={`${title} products`}><ProductGrid items={items} onShowProduct={onShowProduct} label={label} /></section></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><BackToTop /></div>;
+}
+
+function ProductPage({ item, bagCount, onShowNewCollection, onShowMen, onShowHome, onAdd }) {
   const [selectedSize, setSelectedSize] = useState('');
   const [added, setAdded] = useState(false);
   const hasSizes = item.sizes.length > 0;
@@ -87,8 +98,12 @@ function ProductPage({ item, bagCount, onShowNewCollection, onShowHome, onAdd })
   };
 
   const belongsToAutumnCollection = item.group === 'autumn';
+  const belongsToMensCollection = item.group === 'men';
+  const returnToCollection = belongsToAutumnCollection ? onShowNewCollection : belongsToMensCollection ? onShowMen : onShowHome;
+  const backLabel = belongsToAutumnCollection ? 'new arrivals' : belongsToMensCollection ? 'men' : 'home';
+  const collectionLabel = belongsToAutumnCollection ? 'Autumn collection · 2026' : belongsToMensCollection ? 'Men’s collection · 2026' : `Soren Studio · ${item.category}`;
   const addToBagLabel = added ? hasSizes ? `Added · ${selectedSize}` : 'Added to bag' : hasSizes ? selectedSize ? `Add size ${selectedSize} to bag` : 'Choose a size' : 'Add to bag';
-  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><main className="product-page"><button type="button" className="product-back" onClick={belongsToAutumnCollection ? onShowNewCollection : onShowHome}>← Back to {belongsToAutumnCollection ? 'new arrivals' : 'home'}</button><div className="product-detail"><div className="product-detail-image"><img src={item.image} alt={item.name} /></div><section className="product-detail-copy"><p className="eyebrow">{belongsToAutumnCollection ? 'Autumn collection · 2026' : `Soren Studio · ${item.category}`}</p><h1>{item.name}</h1><p className="product-price">{item.price}</p><p className="product-description">{item.description}</p><dl className="product-specs"><div><dt>Fabric</dt><dd>{item.material}</dd></div><div><dt>Fit</dt><dd>{item.fit}</dd></div></dl>{hasSizes && <fieldset className="size-picker"><legend>Choose your size <span>{selectedSize && `· ${selectedSize}`}</span></legend><div>{item.sizes.map((size) => <button type="button" key={size} className={selectedSize === size ? 'selected' : ''} aria-pressed={selectedSize === size} onClick={() => { setSelectedSize(size); setAdded(false); }}>{size}</button>)}</div></fieldset>}<button type="button" className="button button-dark add-to-bag" disabled={hasSizes && !selectedSize} onClick={addItem}>{addToBagLabel}</button>{added && <p className="bag-confirmation" role="status">Added to your bag.</p>}</section></div></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /></div>;
+  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={onShowNewCollection} onShowMen={onShowMen} onShowHome={onShowHome} /><main className="product-page"><button type="button" className="product-back" onClick={returnToCollection}>← Back to {backLabel}</button><div className="product-detail"><div className="product-detail-image"><img src={item.image} alt={item.name} /></div><section className="product-detail-copy"><p className="eyebrow">{collectionLabel}</p><h1>{item.name}</h1><p className="product-price">{item.price}</p><p className="product-description">{item.description}</p><dl className="product-specs"><div><dt>Fabric</dt><dd>{item.material}</dd></div><div><dt>Fit</dt><dd>{item.fit}</dd></div></dl>{hasSizes && <fieldset className="size-picker"><legend>Choose your size <span>{selectedSize && `· ${selectedSize}`}</span></legend><div>{item.sizes.map((size) => <button type="button" key={size} className={selectedSize === size ? 'selected' : ''} aria-pressed={selectedSize === size} onClick={() => { setSelectedSize(size); setAdded(false); }}>{size}</button>)}</div></fieldset>}<button type="button" className="button button-dark add-to-bag" disabled={hasSizes && !selectedSize} onClick={addItem}>{addToBagLabel}</button>{added && <p className="bag-confirmation" role="status">Added to your bag.</p>}</section></div></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><BackToTop /></div>;
 }
 
 function App() {
@@ -96,7 +111,9 @@ function App() {
   const getCurrentRoute = () => {
     const productSlug = window.location.hash.match(/^#product\/(.+)$/)?.[1];
     if (productSlug) return { page: 'product', productSlug };
-    return { page: window.location.hash === '#new-autumn' ? 'autumn' : 'home' };
+    if (window.location.hash === '#new-autumn') return { page: 'autumn' };
+    if (window.location.hash === '#men') return { page: 'men' };
+    return { page: 'home' };
   };
   const [route, setRoute] = useState(getCurrentRoute);
   useEffect(() => {
@@ -105,13 +122,15 @@ function App() {
     return () => window.removeEventListener('hashchange', syncRoute);
   }, []);
   const showNewCollection = () => { window.location.hash = 'new-autumn'; window.scrollTo(0, 0); };
+  const showMen = () => { window.location.hash = 'men'; window.scrollTo(0, 0); };
   const showHome = () => { window.location.hash = ''; window.scrollTo(0, 0); };
   const showProduct = (slug) => { window.location.hash = `product/${slug}`; window.scrollTo(0, 0); };
   const addToBag = () => setBagCount((count) => count + 1);
   const selectedProduct = route.page === 'product' ? productBySlug(route.productSlug) : null;
-  if (selectedProduct) return <ProductPage item={selectedProduct} bagCount={bagCount} onShowNewCollection={showNewCollection} onShowHome={showHome} onAdd={addToBag} />;
-  if (route.page === 'autumn') return <AutumnCollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowHome={showHome} onShowProduct={showProduct} />;
-  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={showNewCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
+  if (selectedProduct) return <ProductPage item={selectedProduct} bagCount={bagCount} onShowNewCollection={showNewCollection} onShowMen={showMen} onShowHome={showHome} onAdd={addToBag} />;
+  if (route.page === 'autumn') return <CollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowMen={showMen} onShowHome={showHome} onShowProduct={showProduct} items={autumnProducts} eyebrow="New" title="Autumn collection" description="Thoughtful layers and timeless pieces for the season ahead." label="New season" />;
+  if (route.page === 'men') return <CollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowMen={showMen} onShowHome={showHome} onShowProduct={showProduct} items={mensProducts} eyebrow="Soren menswear" title="Men’s collection" description="Relaxed tailoring and purposeful layers for every day." label="Menswear" />;
+  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={showNewCollection} onShowMen={showMen} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

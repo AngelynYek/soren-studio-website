@@ -16,6 +16,15 @@ import hollisMac from '../images/autumn/brown trenchcoat.jpg';
 import cedarJacket from '../images/autumn/jacket.jpg';
 import irisSkirt from '../images/autumn/pleated skirt.jpg';
 import elaraKnit from '../images/autumn/white sweater.jpg';
+import orsonTrouser from '../images/men/black pants.jpg';
+import aubinShirt from '../images/men/blue collar.jpeg';
+import marlowOvershirt from '../images/men/brown outerwear.jpg';
+import wellsTrouser from '../images/men/brown pant.jpeg';
+import claretTee from '../images/men/burgundy shirt.jpg';
+import miroOvershirt from '../images/men/khaki outerwear.jpg';
+import duneShirt from '../images/men/pink collar.jpg';
+import ridgeShirt from '../images/men/white collar.png';
+import ecruKnit from '../images/men/white knitwear.jpg';
 
 const createProduct = (product) => ({
   sizes: ['XS', 'S', 'M', 'L'],
@@ -43,6 +52,15 @@ export const products = [
   createProduct({ slug: 'cedar-contrast-collar-jacket', name: 'Cedar Contrast-Collar Jacket', price: 'RM 138', image: cedarJacket, group: 'autumn', category: 'Outerwear', description: 'A cropped cocoa jacket defined by a deep contrast collar and relaxed, easy structure.', material: 'Cotton canvas with corduroy trim', fit: 'Boxy fit with a cropped length' }),
   createProduct({ slug: 'iris-check-pleated-midi-skirt', name: 'Iris Check Pleated Midi Skirt', price: 'RM 109', image: irisSkirt, group: 'autumn', category: 'Skirts', description: 'A check pleated midi skirt with precise movement and a grounded autumn palette.', material: 'Brushed wool blend', fit: 'High waist with a full pleated shape' }),
   createProduct({ slug: 'elara-cable-sleeve-knit', name: 'Elara Cable-Sleeve Knit', price: 'RM 92', image: elaraKnit, group: 'autumn', category: 'Knitwear', description: 'A cream knit with soft cable detail and an easy, softly voluminous sleeve.', material: 'Cotton and wool blend', fit: 'Relaxed fit with a ribbed hem' }),
+  createProduct({ slug: 'orson-wide-leg-trouser', name: 'Orson Wide-Leg Trouser', price: 'RM 118', image: orsonTrouser, group: 'men', category: 'Trousers', description: 'A black tailored trouser with front pleats and a generous wide leg, bringing a quiet sense of structure to everyday dressing.', material: 'Composition to be confirmed', fit: 'Full-length silhouette with a wide leg', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'aubin-drawcord-shirt', name: 'Aubin Drawcord Shirt', price: 'RM 112', image: aubinShirt, group: 'men', category: 'Shirts', description: 'A deep navy shirt with a subtle drawcord hem for an easy, architectural silhouette.', material: 'Crisp cotton blend', fit: 'Relaxed fit with an adjustable hem', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'marlow-utility-overshirt', name: 'Marlow Utility Overshirt', price: 'RM 126', image: marlowOvershirt, group: 'men', category: 'Outerwear', description: 'A warm brown overshirt with clean patch pockets and a softly structured finish.', material: 'Brushed cotton twill', fit: 'Regular fit; designed for light layering', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'wells-pleated-trouser', name: 'Wells Pleated Trouser', price: 'RM 116', image: wellsTrouser, group: 'men', category: 'Trousers', description: 'A fluid brown trouser with a relaxed straight leg and a softly tailored pleat.', material: 'Draped wool blend', fit: 'Mid rise with a relaxed straight leg', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'claret-box-tee', name: 'Claret Box Tee', price: 'RM 62', image: claretTee, group: 'men', category: 'Tops', description: 'A softly weighted short-sleeve tee in a rich claret hue with an elevated, boxy shape.', material: 'Heavyweight cotton jersey', fit: 'Relaxed box fit', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'miro-patch-pocket-overshirt', name: 'Miro Patch-Pocket Overshirt', price: 'RM 132', image: miroOvershirt, group: 'men', category: 'Outerwear', description: 'A stone overshirt with generous patch pockets and quiet utility-inspired detail.', material: 'Cotton canvas', fit: 'Relaxed fit with dropped shoulders', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'dune-linen-shirt', name: 'Dune Linen Shirt', price: 'RM 89', image: duneShirt, group: 'men', category: 'Shirts', description: 'A pale rose linen shirt that brings a softened note of colour to everyday tailoring.', material: 'Washed linen', fit: 'Relaxed fit with a curved hem', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'ridge-textured-camp-shirt', name: 'Ridge Textured Camp Shirt', price: 'RM 94', image: ridgeShirt, group: 'men', category: 'Shirts', description: 'An ivory short-sleeve shirt with subtle woven texture and a clean camp collar.', material: 'Textured cotton blend', fit: 'Easy fit through the body', sizes: ['S', 'M', 'L', 'XL'] }),
+  createProduct({ slug: 'ecru-shawl-collar-knit', name: 'Ecru Shawl-Collar Knit', price: 'RM 124', image: ecruKnit, group: 'men', category: 'Knitwear', description: 'A soft ecru knit with a generous shawl collar and a relaxed, layered silhouette.', material: 'Wool and cotton blend', fit: 'Oversized fit with dropped shoulders', sizes: ['S', 'M', 'L', 'XL'] }),
 ];
 
 export const productsByGroup = (group) => products.filter((product) => product.group === group);

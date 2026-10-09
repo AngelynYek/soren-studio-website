@@ -2,13 +2,14 @@ import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
 import { Search, UserRound, ShoppingBag, Menu, X, Instagram, Facebook, ArrowRight, ArrowUp } from 'lucide-react';
 import './style.css';
-import { productBySlug, productsByGroup } from './data/products';
+import { featuredProductsByGroup, productBySlug, productsByGroup } from './data/products';
 import { collections } from './data/collections';
 import SizeGuide from './components/SizeGuide';
+import ProductPrice from './components/ProductPrice';
 
 const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
-const offers = productsByGroup('offers');
+const offers = featuredProductsByGroup('offers');
 const icons = productsByGroup('icons');
 
 
@@ -23,7 +24,7 @@ function Header({ bagCount, onShowCollection, onShowHome }) {
     <header className="header">
       <button className="icon-button mobile-menu" aria-label="Open menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
       <nav className={`nav nav-left ${menuOpen ? 'nav-open' : ''}`} aria-label="Main navigation">
-        {Object.entries(collections).map(([key, collection]) => (
+        {Object.entries(collections).filter(([, collection]) => collection.navLabel).map(([key, collection]) => (
           <button key={key} type="button" className="navigation-button nav-link" onClick={() => openCollection(key)}>{collection.navLabel}</button>
         ))}
       </nav>
@@ -41,15 +42,15 @@ function Hero({ onShowNewCollection }) {
 }
 
 function ProductCard({ item, onShowProduct, label = 'Soren edit' }) {
-  return <article className="product-card"><button type="button" className="product-image" onClick={() => onShowProduct(item.slug)}><img src={item.image} alt={item.name} loading="lazy" /><span className="product-tag">{label}</span></button><div className="product-info"><div><button type="button" className="product-name" onClick={() => onShowProduct(item.slug)}>{item.name}</button><p>{item.price}{item.wasPrice && <> <del>{item.wasPrice}</del></>}</p></div></div></article>;
+  return <article className="product-card"><button type="button" className="product-image" onClick={() => onShowProduct(item.slug)}><img src={item.image} alt={item.name} loading="lazy" /><span className="product-tag">{label}</span></button><div className="product-info"><div><button type="button" className="product-name" onClick={() => onShowProduct(item.slug)}>{item.name}</button><p><ProductPrice price={item.price} wasPrice={item.wasPrice} /></p></div></div></article>;
 }
 
 function ProductGrid({ items, onShowProduct, label, compact = false }) {
   return <div className={`product-grid ${compact ? 'three-up' : ''}`}>{items.map((item) => <ProductCard key={item.slug} item={item} onShowProduct={onShowProduct} label={label} />)}</div>;
 }
 
-function ProductSection({ title, items, id, onShowProduct, compact = false }) {
-  return <section className={`product-section ${compact ? 'compact' : ''}`} id={id}><div className="section-heading"><p className="eyebrow">Curated for you</p><h2>{title}</h2><button type="button" className="section-heading-link">View all <ArrowRight size={13} /></button></div><ProductGrid items={items} onShowProduct={onShowProduct} compact={compact} /></section>;
+function ProductSection({ title, items, id, onShowProduct, onViewAll, label, compact = false }) {
+  return <section className={`product-section ${compact ? 'compact' : ''}`} id={id}><div className="section-heading"><p className="eyebrow">Curated for you</p><h2>{title}</h2>{onViewAll && <button type="button" className="section-heading-link" onClick={onViewAll} aria-label={`View all ${title.toLowerCase()}`}>View all <ArrowRight size={13} /></button>}</div><ProductGrid items={items} onShowProduct={onShowProduct} label={label} compact={compact} /></section>;
 }
 
 function EssentialsBanner() {
@@ -106,7 +107,7 @@ function ProductPage({ item, bagCount, onShowNewCollection, onShowCollection, on
         <section className="product-detail-copy">
           <p className="eyebrow">{collectionLabel}</p>
           <h1>{item.name}</h1>
-          <p className="product-price">{item.price}</p>
+          <p className="product-price"><ProductPrice price={item.price} wasPrice={item.wasPrice} /></p>
           <p className="product-description">{item.description}</p>
           <dl className="product-specs">
             {item.material && <div><dt>Fabric</dt><dd>{item.material}</dd></div>}
@@ -161,7 +162,7 @@ function App() {
   if (selectedProduct) return <ProductPage key={selectedProduct.slug} item={selectedProduct} bagCount={bagCount} onShowNewCollection={showNewCollection} onShowCollection={showCollection} onShowHome={showHome} onAdd={addToBag} />;
   const collection = collections[route.page];
   if (collection) return <CollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowCollection={showCollection} onShowHome={showHome} onShowProduct={showProduct} items={productsByGroup(collection.group)} {...collection} />;
-  return <div id="top"><Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
+  return <div id="top"><Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} onViewAll={() => showCollection('offers')} label={collections.offers.label} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

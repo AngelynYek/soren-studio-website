@@ -30,6 +30,7 @@ const categoryMeasurements = {
   Knitwear: ['upperBody', 'waist'],
   Outerwear: ['upperBody', 'waist'],
   Dresses: ['upperBody', 'waist', 'hips'],
+  Sets: ['upperBody', 'waist', 'hips'],
   Skirts: ['waist', 'hips'],
   Trousers: ['waist', 'hips'],
 };

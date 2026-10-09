@@ -1,4 +1,5 @@
 // One record controls a collection's route, heading and product-page return link.
+// navLabel is optional: editorial collections can be reached from the homepage.
 export const collections = {
   autumn: {
     hash: '#new-autumn', group: 'autumn', eyebrow: 'New',
@@ -19,5 +20,10 @@ export const collections = {
     hash: '#accessories', group: 'accessories', eyebrow: 'The finishing touches',
     title: 'Accessories', description: 'Sculptural accents and considered details to complete the everyday wardrobe.',
     label: 'Accessories edit', backLabel: 'accessories', navLabel: 'Accessories',
+  },
+  offers: {
+    hash: '#exclusive-offers', group: 'offers', eyebrow: 'Curated for you',
+    title: 'Exclusive offers', description: 'Considered pieces and timeless accents, at a little less.',
+    label: 'Exclusive offer', backLabel: 'exclusive offers',
   },
 };

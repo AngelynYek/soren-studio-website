@@ -42,11 +42,11 @@ test('unit conversion uses centimetres as its source without mutating ranges', (
 });
 
 test('every catalog clothing product has a renderable guide with sane measurement progression', async () => {
-  const server = await createServer({ server: { middlewareMode: true }, appType: 'custom' });
+  const server = await createServer({ server: { middlewareMode: true, hmr: false, ws: false }, appType: 'custom' });
   try {
     const { products } = await server.ssrLoadModule('/src/data/products.js');
     const { default: SizeGuide } = await server.ssrLoadModule('/src/components/SizeGuide.jsx');
-    const clothing = products.filter((product) => ['Tops', 'Shirts', 'Knitwear', 'Outerwear', 'Dresses', 'Skirts', 'Trousers'].includes(product.category));
+    const clothing = products.filter((product) => ['Tops', 'Shirts', 'Knitwear', 'Outerwear', 'Dresses', 'Sets', 'Skirts', 'Trousers'].includes(product.category));
     assert.ok(clothing.length > 0);
     for (const product of clothing) {
       const guide = getSizeGuide(product);

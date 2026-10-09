@@ -1,61 +1,51 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { Search, UserRound, ShoppingBag, Menu, X, Instagram, Facebook, ArrowRight } from 'lucide-react';
+import { Search, UserRound, ShoppingBag, Menu, X, Instagram, Facebook, ArrowRight, ArrowUp } from 'lucide-react';
 import './style.css';
-import offerBag from './images/The Under-the-Radar Handbag Fashion People and Editors Can\'t Stop Carrying.jpg';
-import offerDress from './images/Drei Master.jpg';
-import offerSkirt from './images/Gonna Midi in Raso - VariationMaster _ Atelier Emé.jpg';
-import iconDress from './images/Black dress.jpeg';
-import iconTrench from './images/Trench.jpg';
-import iconTrouser from './images/pleatedpants.jpg';
-import iconKnit from './images/vneck.jpg';
-import iconSkirt from './images/LorettaSkirt.jpg';
-import iconCoat from './images/woolovercoat.jpg';
+import { productBySlug, productsByGroup } from './data/products';
 
 const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
-const offers = [
-  { name: 'Soren Minimalist Hobo Bag', price: 'RM 64', wasPrice: 'RM 80', image: offerBag },
-  { name: 'Freja Two-Tone Ribbed Sweater Dress', price: 'RM 108', wasPrice: 'RM 135', image: offerDress },
-  { name: 'Sienna Flared Midi Skirt', price: 'RM 96', wasPrice: 'RM 120', image: offerSkirt },
-];
-const icons = [
-  { name: 'The Noir Fold', price: 'RM140', image: iconDress },
-  { name: 'Elias Minimalist Trench Coat', price: 'RM157', image: iconTrench },
-  { name: 'Kaya Pleated Wide-Leg Trouser', price: 'RM118', image: iconTrouser },
-  { name: 'The Half-Zip Cable Knit', price: 'RM76', image: iconKnit },
-  { name: 'Loretta Tailored Midi Pencil Skirt', price: 'RM88', image: iconSkirt },
-  { name: 'Espresso Oversized Longline Coat ', price: 'RM190', image: iconCoat },
-];
+const offers = productsByGroup('offers');
+const icons = productsByGroup('icons');
+const autumnProducts = productsByGroup('autumn');
 
-function Header({ bagCount }) {
+function Header({ bagCount, onShowNewCollection, onShowHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const openNewCollection = () => {
+    setMenuOpen(false);
+    onShowNewCollection();
+  };
   return <>
     <div className="announcement">10% discount when subscribing to our newsletter</div>
     <header className="header">
       <button className="icon-button mobile-menu" aria-label="Open menu" onClick={() => setMenuOpen(!menuOpen)}>{menuOpen ? <X /> : <Menu />}</button>
       <nav className={`nav nav-left ${menuOpen ? 'nav-open' : ''}`} aria-label="Main navigation">
-        <a href="#new" onClick={() => setMenuOpen(false)}>New</a><span className="nav-static">Men</span><span className="nav-static">Women</span><span className="nav-static">Accessories</span>
+        <button type="button" className="navigation-button nav-link" onClick={openNewCollection}>New</button><span className="nav-static">Men</span><span className="nav-static">Women</span><span className="nav-static">Accessories</span>
       </nav>
-      <a className="wordmark" href="#top" aria-label="Soren Studio home">SOREN</a>
+      <button type="button" className="wordmark wordmark-button" onClick={onShowHome} aria-label="Soren Studio home">SOREN</button>
       <div className="header-actions"><button className="icon-button search-button" aria-label="Search"><Search /></button><button className="icon-button account-button" aria-label="Account"><UserRound /></button><button className="icon-button bag-button" aria-label={`Shopping bag, ${bagCount} items`}><ShoppingBag />{bagCount > 0 && <span className="bag-count">{bagCount}</span>}</button></div>
     </header>
   </>;
 }
 
-function Hero() {
+function Hero({ onShowNewCollection }) {
   return <section className="hero" id="new" style={{ '--hero-image': `url("${photo('photo-1539109136881-3be0616acf4b', 1800)}")` }}>
-    <div className="hero-copy"><p className="eyebrow light">The new season · 2026</p><h1>New autumn<br />collection</h1><p>Timeless silhouettes for cooler days.</p><button type="button" className="button button-light">Discover the edit <ArrowRight size={14} /></button></div>
+    <div className="hero-copy"><p className="eyebrow light">The new season · 2026</p><h1>New autumn<br />collection</h1><p>Timeless silhouettes for cooler days.</p><button type="button" className="button button-light" onClick={onShowNewCollection}>Discover the edit <ArrowRight size={14} /></button></div>
     <span className="image-credit">Quiet mornings. Longer walks.</span>
   </section>;
 }
 
-function ProductCard({ item, onAdd }) {
-  return <article className="product-card"><a className="product-image" href="#essentials"><img src={item.image.startsWith('photo-') ? photo(item.image, 700) : item.image} alt={item.name} loading="lazy" /><span className="product-tag">SOREN EDIT</span></a><div className="product-info"><div><h3>{item.name}</h3><p>{item.price}{item.wasPrice && <> <del>{item.wasPrice}</del></>}</p></div><button className="quick-add" aria-label={`Add ${item.name} to bag`} onClick={onAdd}>+</button></div></article>;
+function ProductCard({ item, onShowProduct, label = 'Soren edit' }) {
+  return <article className="product-card"><button type="button" className="product-image" onClick={() => onShowProduct(item.slug)}><img src={item.image} alt={item.name} loading="lazy" /><span className="product-tag">{label}</span></button><div className="product-info"><div><button type="button" className="product-name" onClick={() => onShowProduct(item.slug)}>{item.name}</button><p>{item.price}{item.wasPrice && <> <del>{item.wasPrice}</del></>}</p></div></div></article>;
 }
 
-function ProductSection({ title, items, id, onAdd, compact = false }) {
-  return <section className={`product-section ${compact ? 'compact' : ''}`} id={id}><div className="section-heading"><p className="eyebrow">Curated for you</p><h2>{title}</h2><button type="button" className="section-heading-link">View all <ArrowRight size={13} /></button></div><div className={`product-grid ${compact ? 'three-up' : ''}`}>{items.map((item) => <ProductCard key={item.name} item={item} onAdd={onAdd} />)}</div></section>;
+function ProductGrid({ items, onShowProduct, label, compact = false }) {
+  return <div className={`product-grid ${compact ? 'three-up' : ''}`}>{items.map((item) => <ProductCard key={item.slug} item={item} onShowProduct={onShowProduct} label={label} />)}</div>;
+}
+
+function ProductSection({ title, items, id, onShowProduct, compact = false }) {
+  return <section className={`product-section ${compact ? 'compact' : ''}`} id={id}><div className="section-heading"><p className="eyebrow">Curated for you</p><h2>{title}</h2><button type="button" className="section-heading-link">View all <ArrowRight size={13} /></button></div><ProductGrid items={items} onShowProduct={onShowProduct} compact={compact} /></section>;
 }
 
 function EssentialsBanner() {
@@ -66,13 +56,62 @@ function SignupBanner() {
   return <section className="signup-banner"><div className="signup-copy"><p className="eyebrow">A little something from us</p><h2>Unlock 10% off your first order</h2><p>Enjoy 10% off your first purchase, alongside early access to capsule drops and private curation.</p><form onSubmit={(event) => { event.preventDefault(); event.currentTarget.reset(); alert('Thanks for joining the Soren Studio list!'); }}><label className="visually-hidden" htmlFor="email">Your email address</label><input id="email" type="email" placeholder="Your email address" required /><button type="submit" aria-label="Subscribe"><ArrowRight size={16} /></button></form><small>By subscribing, you agree to our Privacy Policy.</small></div><div className="signup-image" role="img" aria-label="Neutral garments on a rail" /></section>;
 }
 
-function Footer() {
-  return <footer className="footer"><div className="footer-brand"><a className="wordmark" href="#top">SOREN</a><p>Timeless silhouettes and considered essentials crafted for the modern wardrobe. Designed to endure beyond seasons.</p><div className="socials"><a href="#instagram" aria-label="Instagram"><Instagram size={16} /></a><a href="#facebook" aria-label="Facebook"><Facebook size={15} /></a></div></div><div className="footer-column"><h3>Explore</h3><a href="#new">New arrivals</a><a href="#offers">Shop all</a><a href="#essentials">Our story</a></div><div className="footer-column"><h3>Client care</h3><a href="#shipping">Shipping & returns</a><a href="#faq">FAQs</a><a href="#contact">Contact us</a></div><div className="footer-column"><h3>Find us</h3><p>Monday – Friday<br />9am – 5pm EST</p><a href="mailto:hello@soren.studio">hello@soren.studio</a></div><div className="footer-bottom"><span>© 2025 Soren Studio. All rights reserved.</span><div><a href="#privacy">Privacy</a><a href="#terms">Terms</a></div><span>Made with intention.</span></div></footer>;
+function Footer({ onShowNewCollection, onShowHome }) {
+  return <footer className="footer"><div className="footer-brand"><button type="button" className="wordmark wordmark-button" onClick={onShowHome}>SOREN</button><p>Timeless silhouettes and considered essentials crafted for the modern wardrobe. Designed to endure beyond seasons.</p><div className="socials"><a href="#instagram" aria-label="Instagram"><Instagram size={16} /></a><a href="#facebook" aria-label="Facebook"><Facebook size={15} /></a></div></div><div className="footer-column"><h3>Explore</h3><button type="button" className="navigation-button footer-link" onClick={onShowNewCollection}>New arrivals</button><a href="#offers">Shop all</a><a href="#essentials">Our story</a></div><div className="footer-column"><h3>Client care</h3><a href="#shipping">Shipping & returns</a><a href="#faq">FAQs</a><a href="#contact">Contact us</a></div><div className="footer-column"><h3>Find us</h3><p>Monday – Friday<br />9am – 5pm EST</p><a href="mailto:hello@soren.studio">hello@soren.studio</a></div><div className="footer-bottom"><span>© 2025 Soren Studio. All rights reserved.</span><div><a href="#privacy">Privacy</a><a href="#terms">Terms</a></div><span>Made with intention.</span></div></footer>;
+}
+
+function AutumnCollectionPage({ bagCount, onShowNewCollection, onShowHome, onShowProduct }) {
+  const [showBackToTop, setShowBackToTop] = useState(false);
+  useEffect(() => {
+    const updateBackToTop = () => setShowBackToTop(window.scrollY > 360);
+    updateBackToTop();
+    window.addEventListener('scroll', updateBackToTop, { passive: true });
+    return () => window.removeEventListener('scroll', updateBackToTop);
+  }, []);
+
+  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><main className="collection-page"><section className="collection-listing-heading"><p className="eyebrow">New</p><h1>Autumn collection</h1><p>Thoughtful layers and timeless pieces for the season ahead.</p></section><section className="collection-product-list" aria-label="Autumn collection products"><ProductGrid items={autumnProducts} onShowProduct={onShowProduct} label="New season" /></section></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} />{showBackToTop && <button className="back-to-top" type="button" aria-label="Back to top" onClick={() => window.scrollTo({ top: 0, behavior: 'smooth' })}>Back to top <ArrowUp size={14} /></button>}</div>;
+}
+
+function ProductPage({ item, bagCount, onShowNewCollection, onShowHome, onAdd }) {
+  const [selectedSize, setSelectedSize] = useState('');
+  const [added, setAdded] = useState(false);
+  const hasSizes = item.sizes.length > 0;
+  useEffect(() => {
+    setSelectedSize('');
+    setAdded(false);
+  }, [item.slug]);
+  const addItem = () => {
+    if (hasSizes && !selectedSize) return;
+    onAdd();
+    setAdded(true);
+  };
+
+  const belongsToAutumnCollection = item.group === 'autumn';
+  const addToBagLabel = added ? hasSizes ? `Added · ${selectedSize}` : 'Added to bag' : hasSizes ? selectedSize ? `Add size ${selectedSize} to bag` : 'Choose a size' : 'Add to bag';
+  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><main className="product-page"><button type="button" className="product-back" onClick={belongsToAutumnCollection ? onShowNewCollection : onShowHome}>← Back to {belongsToAutumnCollection ? 'new arrivals' : 'home'}</button><div className="product-detail"><div className="product-detail-image"><img src={item.image} alt={item.name} /></div><section className="product-detail-copy"><p className="eyebrow">{belongsToAutumnCollection ? 'Autumn collection · 2026' : `Soren Studio · ${item.category}`}</p><h1>{item.name}</h1><p className="product-price">{item.price}</p><p className="product-description">{item.description}</p><dl className="product-specs"><div><dt>Fabric</dt><dd>{item.material}</dd></div><div><dt>Fit</dt><dd>{item.fit}</dd></div></dl>{hasSizes && <fieldset className="size-picker"><legend>Choose your size <span>{selectedSize && `· ${selectedSize}`}</span></legend><div>{item.sizes.map((size) => <button type="button" key={size} className={selectedSize === size ? 'selected' : ''} aria-pressed={selectedSize === size} onClick={() => { setSelectedSize(size); setAdded(false); }}>{size}</button>)}</div></fieldset>}<button type="button" className="button button-dark add-to-bag" disabled={hasSizes && !selectedSize} onClick={addItem}>{addToBagLabel}</button>{added && <p className="bag-confirmation" role="status">Added to your bag.</p>}</section></div></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /></div>;
 }
 
 function App() {
   const [bagCount, setBagCount] = useState(0);
-  return <div id="top"><Header bagCount={bagCount} /><main><Hero /><ProductSection title="Exclusive offers" items={offers} id="offers" onAdd={() => setBagCount((count) => count + 1)} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onAdd={() => setBagCount((count) => count + 1)} /><SignupBanner /></main><Footer /></div>;
+  const getCurrentRoute = () => {
+    const productSlug = window.location.hash.match(/^#product\/(.+)$/)?.[1];
+    if (productSlug) return { page: 'product', productSlug };
+    return { page: window.location.hash === '#new-autumn' ? 'autumn' : 'home' };
+  };
+  const [route, setRoute] = useState(getCurrentRoute);
+  useEffect(() => {
+    const syncRoute = () => setRoute(getCurrentRoute());
+    window.addEventListener('hashchange', syncRoute);
+    return () => window.removeEventListener('hashchange', syncRoute);
+  }, []);
+  const showNewCollection = () => { window.location.hash = 'new-autumn'; window.scrollTo(0, 0); };
+  const showHome = () => { window.location.hash = ''; window.scrollTo(0, 0); };
+  const showProduct = (slug) => { window.location.hash = `product/${slug}`; window.scrollTo(0, 0); };
+  const addToBag = () => setBagCount((count) => count + 1);
+  const selectedProduct = route.page === 'product' ? productBySlug(route.productSlug) : null;
+  if (selectedProduct) return <ProductPage item={selectedProduct} bagCount={bagCount} onShowNewCollection={showNewCollection} onShowHome={showHome} onAdd={addToBag} />;
+  if (route.page === 'autumn') return <AutumnCollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowHome={showHome} onShowProduct={showProduct} />;
+  return <div id="top"><Header bagCount={bagCount} onShowNewCollection={showNewCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

@@ -31,4 +31,9 @@ export const collections = {
     title: 'Iconic pieces', description: 'Signature silhouettes and quiet statement pieces, chosen to endure.',
     label: 'Signature piece', backLabel: 'iconic pieces',
   },
+  basics: {
+    hash: '#timeless-basics', group: 'basics', eyebrow: 'Pieces to keep',
+    title: 'Timeless basics', description: 'Everyday foundations, thoughtful textures, and layers to return to.',
+    label: 'Everyday essential', backLabel: 'timeless basics',
+  },
 };

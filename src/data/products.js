@@ -28,6 +28,7 @@ import primroseBlouse from '../images/women/yellow top.jpg';
 import { accessories } from './accessories';
 import { offerProducts } from './offers';
 import { iconicProducts } from './iconic';
+import { basicProducts } from './basics';
 
 const createProduct = (product) => ({
   sizes: ['XS', 'S', 'M', 'L'],
@@ -73,6 +74,7 @@ const womensProducts = [
 export const products = [
   ...offerProducts.map(createProduct),
   ...iconicProducts.map(createProduct),
+  ...basicProducts.map(createProduct),
   ...existingProducts,
   ...womensProducts.map((product) => createProduct({ ...product, group: 'women' })),
   ...accessories.map(createProduct),

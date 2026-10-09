@@ -53,8 +53,8 @@ function ProductSection({ title, items, id, onShowProduct, onViewAll, label, com
   return <section className={`product-section ${compact ? 'compact' : ''}`} id={id}><div className="section-heading"><p className="eyebrow">Curated for you</p><h2>{title}</h2>{onViewAll && <button type="button" className="section-heading-link" onClick={onViewAll} aria-label={`View all ${title.toLowerCase()}`}>View all <ArrowRight size={13} /></button>}</div><ProductGrid items={items} onShowProduct={onShowProduct} label={label} compact={compact} /></section>;
 }
 
-function EssentialsBanner() {
-  return <section className="essentials-banner" id="essentials" style={{ '--essentials-image': `url("${photo('photo-1483985988355-763728e1935b', 1700)}")` }}><div className="essentials-copy"><p className="eyebrow">Pieces to keep</p><h2>Timeless<br />basics</h2><p>Good clothes, made to be lived in.</p><button type="button" className="button button-dark">Shop the essentials <ArrowRight size={14} /></button></div></section>;
+function EssentialsBanner({ onShowBasics }) {
+  return <section className="essentials-banner" id="essentials" style={{ '--essentials-image': `url("${photo('photo-1483985988355-763728e1935b', 1700)}")` }}><div className="essentials-copy"><p className="eyebrow">Pieces to keep</p><h2>Timeless<br />basics</h2><p>Good clothes, made to be lived in.</p><button type="button" className="button button-dark" onClick={onShowBasics}>Shop the essentials <ArrowRight size={14} /></button></div></section>;
 }
 
 function SignupBanner() {
@@ -162,7 +162,7 @@ function App() {
   if (selectedProduct) return <ProductPage key={selectedProduct.slug} item={selectedProduct} bagCount={bagCount} onShowNewCollection={showNewCollection} onShowCollection={showCollection} onShowHome={showHome} onAdd={addToBag} />;
   const collection = collections[route.page];
   if (collection) return <CollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowCollection={showCollection} onShowHome={showHome} onShowProduct={showProduct} items={productsByGroup(collection.group)} {...collection} />;
-  return <div id="top"><Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} onViewAll={() => showCollection('offers')} label={collections.offers.label} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} onViewAll={() => showCollection('icons')} label={collections.icons.label} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
+  return <div id="top"><Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} onViewAll={() => showCollection('offers')} label={collections.offers.label} compact /><EssentialsBanner onShowBasics={() => showCollection('basics')} /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} onViewAll={() => showCollection('icons')} label={collections.icons.label} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

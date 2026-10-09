@@ -1,9 +1,3 @@
-import noirDress from '../images/Black dress.jpeg';
-import eliasTrench from '../images/Trench.jpg';
-import kayaTrouser from '../images/pleatedpants.jpg';
-import cableKnit from '../images/vneck.jpg';
-import lorettaSkirt from '../images/LorettaSkirt.jpg';
-import espressoCoat from '../images/woolovercoat.jpg';
 import alderTrousers from '../images/autumn/brown pants.jpg';
 import marlowDress from '../images/autumn/brown dress.jpg';
 import rowanCardigan from '../images/autumn/beige outerwear.jpg';
@@ -33,6 +27,7 @@ import rosalieDress from '../images/women/pink dress.jpg';
 import primroseBlouse from '../images/women/yellow top.jpg';
 import { accessories } from './accessories';
 import { offerProducts } from './offers';
+import { iconicProducts } from './iconic';
 
 const createProduct = (product) => ({
   sizes: ['XS', 'S', 'M', 'L'],
@@ -42,12 +37,6 @@ const createProduct = (product) => ({
 });
 
 const existingProducts = [
-  createProduct({ slug: 'noir-fold-dress', name: 'The Noir Fold Dress', price: 'RM 140', image: noirDress, group: 'icons', category: 'Dresses', description: 'An off-shoulder column dress with a sculpted fold neckline and an elongated, fluid line.', material: '92% viscose, 8% elastane', fit: 'Fitted through the bodice with an easy skirt' }),
-  createProduct({ slug: 'elias-minimalist-trench-coat', sizeProfile: 'men', name: 'Elias Minimalist Trench Coat', price: 'RM 157', image: eliasTrench, group: 'icons', category: 'Outerwear', description: 'A softly structured trench with a relaxed shoulder and clean, considered finishing.', material: 'Cotton-blend twill', fit: 'Relaxed fit; take your usual size', sizes: ['S', 'M', 'L', 'XL'] }),
-  createProduct({ slug: 'kaya-pleated-wide-leg-trouser', name: 'Kaya Pleated Wide-Leg Trouser', price: 'RM 118', image: kayaTrouser, group: 'icons', category: 'Trousers', description: 'High-rise pleated trousers cut with a sweeping wide leg for an effortless drape.', material: 'Tencel and wool blend', fit: 'High rise with a full-length inseam' }),
-  createProduct({ slug: 'half-zip-cable-knit', sizeProfile: 'men', name: 'The Half-Zip Cable Knit', price: 'RM 76', image: cableKnit, group: 'icons', category: 'Knitwear', description: 'A soft cable-knit layer with a neat half zip and a relaxed, everyday proportion.', material: 'Merino wool blend', fit: 'Relaxed fit; size down for a closer fit', sizes: ['S', 'M', 'L'] }),
-  createProduct({ slug: 'loretta-tailored-midi-skirt', name: 'Loretta Tailored Midi Pencil Skirt', price: 'RM 88', image: lorettaSkirt, group: 'icons', category: 'Skirts', description: 'A streamlined midi skirt with precise tailoring and a slit for ease of movement.', material: 'Wool-blend suiting', fit: 'High waist with a tailored silhouette' }),
-  createProduct({ slug: 'espresso-oversized-longline-coat', sizeProfile: 'men', name: 'Espresso Oversized Longline Coat', price: 'RM 190', image: espressoCoat, group: 'icons', category: 'Outerwear', description: 'A longline coat in rich espresso brown, designed for generous layering.', material: 'Brushed wool blend', fit: 'Oversized fit with dropped shoulders', sizes: ['S', 'M', 'L'] }),
   createProduct({ slug: 'marlow-pleated-wool-midi-dress', name: 'Marlow Pleated Wool Midi Dress', price: 'RM 168', image: marlowDress, group: 'autumn', category: 'Dresses', description: 'A softly structured cocoa midi dress with three-quarter sleeves and a beautifully pleated skirt.', material: 'Brushed wool blend', fit: 'Defined waist with a full midi skirt' }),
   createProduct({ slug: 'alder-tailored-wool-trouser', sizeProfile: 'men', name: 'Alder Tailored Wool Trouser', price: 'RM 122', image: alderTrousers, group: 'autumn', category: 'Trousers', description: 'Clean-cut brown trousers with a straight leg and subtle pleats for an understated autumn uniform.', material: 'Wool-blend suiting', fit: 'Mid rise with a straight, relaxed leg', sizes: ['S', 'M', 'L', 'XL'] }),
   createProduct({ slug: 'rowan-soft-cardigan', sizeProfile: 'men', name: 'Rowan Soft Cardigan', price: 'RM 104', image: rowanCardigan, group: 'autumn', category: 'Knitwear', description: 'A light oatmeal cardigan with a soft handfeel and easy layering proportions.', material: 'Cotton and merino blend', fit: 'Relaxed fit with dropped shoulders', sizes: ['S', 'M', 'L', 'XL'] }),
@@ -83,6 +72,7 @@ const womensProducts = [
 
 export const products = [
   ...offerProducts.map(createProduct),
+  ...iconicProducts.map(createProduct),
   ...existingProducts,
   ...womensProducts.map((product) => createProduct({ ...product, group: 'women' })),
   ...accessories.map(createProduct),

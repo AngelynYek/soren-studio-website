@@ -10,7 +10,7 @@ import ProductPrice from './components/ProductPrice';
 const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
 const offers = featuredProductsByGroup('offers');
-const icons = productsByGroup('icons');
+const icons = featuredProductsByGroup('icons');
 
 
 function Header({ bagCount, onShowCollection, onShowHome }) {
@@ -162,7 +162,7 @@ function App() {
   if (selectedProduct) return <ProductPage key={selectedProduct.slug} item={selectedProduct} bagCount={bagCount} onShowNewCollection={showNewCollection} onShowCollection={showCollection} onShowHome={showHome} onAdd={addToBag} />;
   const collection = collections[route.page];
   if (collection) return <CollectionPage bagCount={bagCount} onShowNewCollection={showNewCollection} onShowCollection={showCollection} onShowHome={showHome} onShowProduct={showProduct} items={productsByGroup(collection.group)} {...collection} />;
-  return <div id="top"><Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} onViewAll={() => showCollection('offers')} label={collections.offers.label} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
+  return <div id="top"><Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} /><main><Hero onShowNewCollection={showNewCollection} /><ProductSection title="Exclusive offers" items={offers} id="offers" onShowProduct={showProduct} onViewAll={() => showCollection('offers')} label={collections.offers.label} compact /><EssentialsBanner /><ProductSection title="Iconic pieces" items={icons} id="icons" onShowProduct={showProduct} onViewAll={() => showCollection('icons')} label={collections.icons.label} /><SignupBanner /></main><Footer onShowNewCollection={showNewCollection} onShowHome={showHome} /></div>;
 }
 
 createRoot(document.getElementById('root')).render(<React.StrictMode><App /></React.StrictMode>);

@@ -26,4 +26,9 @@ export const collections = {
     title: 'Exclusive offers', description: 'Considered pieces and timeless accents, at a little less.',
     label: 'Exclusive offer', backLabel: 'exclusive offers',
   },
+  icons: {
+    hash: '#iconic-pieces', group: 'icons', eyebrow: 'The signature edit',
+    title: 'Iconic pieces', description: 'Signature silhouettes and quiet statement pieces, chosen to endure.',
+    label: 'Signature piece', backLabel: 'iconic pieces',
+  },
 };

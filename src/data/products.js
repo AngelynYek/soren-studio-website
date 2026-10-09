@@ -34,6 +34,7 @@ import estelleTrouser from '../images/women/dark brown pants.jpg';
 import miraCardigan from '../images/women/grey top.jpg';
 import rosalieDress from '../images/women/pink dress.jpg';
 import primroseBlouse from '../images/women/yellow top.jpg';
+import { accessories } from './accessories';
 
 const createProduct = (product) => ({
   sizes: ['XS', 'S', 'M', 'L'],
@@ -88,6 +89,7 @@ const womensProducts = [
 export const products = [
   ...existingProducts,
   ...womensProducts.map((product) => createProduct({ ...product, group: 'women' })),
+  ...accessories.map(createProduct),
 ];
 
 export const productsByGroup = (group) => products.filter((product) => product.group === group);

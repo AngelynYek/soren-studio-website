@@ -4,6 +4,7 @@ import { Search, UserRound, ShoppingBag, Menu, X, Instagram, Facebook, ArrowRigh
 import './style.css';
 import { productBySlug, productsByGroup } from './data/products';
 import { collections } from './data/collections';
+import SizeGuide from './components/SizeGuide';
 
 const photo = (id, width = 900) => `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
@@ -96,7 +97,41 @@ function ProductPage({ item, bagCount, onShowNewCollection, onShowCollection, on
   const backLabel = collection?.backLabel ?? 'home';
   const collectionLabel = collection ? collection.title : `Soren Studio · ${item.category}`;
   const addToBagLabel = added ? hasSizes ? `Added · ${selectedSize}` : 'Added to bag' : hasSizes ? selectedSize ? `Add size ${selectedSize} to bag` : 'Choose a size' : 'Add to bag';
-  return <div id="top"><Header bagCount={bagCount} onShowCollection={onShowCollection} onShowHome={onShowHome} /><main className="product-page"><button type="button" className="product-back" onClick={returnToCollection}>← Back to {backLabel}</button><div className="product-detail"><div className="product-detail-image"><img src={item.image} alt={item.name} /></div><section className="product-detail-copy"><p className="eyebrow">{collectionLabel}</p><h1>{item.name}</h1><p className="product-price">{item.price}</p><p className="product-description">{item.description}</p><dl className="product-specs">{item.material && <div><dt>Fabric</dt><dd>{item.material}</dd></div>}<div><dt>{item.fitLabel ?? 'Fit'}</dt><dd>{item.fit}</dd></div></dl>{hasSizes && <fieldset className="size-picker"><legend>Choose your size <span>{selectedSize && `· ${selectedSize}`}</span></legend><div>{item.sizes.map((size) => <button type="button" key={size} className={selectedSize === size ? 'selected' : ''} aria-pressed={selectedSize === size} onClick={() => { setSelectedSize(size); setAdded(false); }}>{size}</button>)}</div></fieldset>}<button type="button" className="button button-dark add-to-bag" disabled={hasSizes && !selectedSize} onClick={addItem}>{addToBagLabel}</button>{added && <p className="bag-confirmation" role="status">Added to your bag.</p>}</section></div></main><Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} /><BackToTop /></div>;
+  return <div id="top">
+    <Header bagCount={bagCount} onShowCollection={onShowCollection} onShowHome={onShowHome} />
+    <main className="product-page">
+      <button type="button" className="product-back" onClick={returnToCollection}>← Back to {backLabel}</button>
+      <div className="product-detail">
+        <div className="product-detail-image"><img src={item.image} alt={item.name} /></div>
+        <section className="product-detail-copy">
+          <p className="eyebrow">{collectionLabel}</p>
+          <h1>{item.name}</h1>
+          <p className="product-price">{item.price}</p>
+          <p className="product-description">{item.description}</p>
+          <dl className="product-specs">
+            {item.material && <div><dt>Fabric</dt><dd>{item.material}</dd></div>}
+            <div><dt>{item.fitLabel ?? 'Fit'}</dt><dd>{item.fit}</dd></div>
+          </dl>
+          {hasSizes && <div className="size-picker-heading">
+            <fieldset className="size-picker">
+              <legend>Choose your size <span>{selectedSize && `· ${selectedSize}`}</span></legend>
+              <div>{item.sizes.map((size) => (
+                <button type="button" key={size} className={selectedSize === size ? 'selected' : ''} aria-pressed={selectedSize === size}
+                  onClick={() => { setSelectedSize(size); setAdded(false); }}>
+                  {size}
+                </button>
+              ))}</div>
+            </fieldset>
+            <SizeGuide product={item} selectedSize={selectedSize} />
+          </div>}
+          <button type="button" className="button button-dark add-to-bag" disabled={hasSizes && !selectedSize} onClick={addItem}>{addToBagLabel}</button>
+          {added && <p className="bag-confirmation" role="status">Added to your bag.</p>}
+        </section>
+      </div>
+    </main>
+    <Footer onShowNewCollection={onShowNewCollection} onShowHome={onShowHome} />
+    <BackToTop />
+  </div>;
 }
 
 function App() {

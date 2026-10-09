@@ -1,0 +1,78 @@
+.size-picker-heading {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.size-picker-heading .size-picker { flex: 1; min-width: 0; }
+.size-guide-trigger {
+  flex-shrink: 0;
+  border: 0;
+  background: transparent;
+  padding: 0 0 4px;
+  color: var(--muted);
+  font-size: 10px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+  cursor: pointer;
+}
+.size-guide-trigger:hover { color: var(--ink); }
+.size-guide-dialog {
+  position: fixed;
+  inset: 0;
+  width: min(600px, calc(100% - 32px));
+  max-height: calc(100dvh - 40px);
+  margin: auto;
+  border: 1px solid var(--line);
+  padding: 36px;
+  overflow: auto;
+  overscroll-behavior: contain;
+  color: var(--ink);
+  background: var(--paper);
+  box-shadow: 0 20px 70px #0003;
+}
+.size-guide-dialog::backdrop { background: #24252280; }
+.size-guide-close { position: absolute; top: 14px; right: 14px; }
+.size-guide-dialog h2 {
+  margin: 0 0 10px;
+  font: 400 34px/1.1 var(--serif);
+  letter-spacing: .025em;
+  text-transform: uppercase;
+}
+.size-guide-product { margin: 0 0 16px; font-size: 12px; }
+.size-guide-notice { margin: 0 0 22px; color: var(--muted); font-size: 11px; line-height: 1.6; }
+.size-guide-units { display: flex; gap: 8px; margin-bottom: 18px; }
+.size-guide-units button {
+  padding: 9px 12px;
+  border: 1px solid var(--line);
+  background: transparent;
+  color: var(--ink);
+  font-size: 10px;
+  cursor: pointer;
+}
+.size-guide-units button[aria-pressed="true"] { background: var(--ink); color: var(--paper); }
+.size-guide-dialog button:focus-visible, .size-guide-trigger:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 3px;
+}
+.size-guide-table-wrap { overflow-x: auto; }
+.size-guide-table { width: 100%; border-collapse: collapse; font-size: 11px; white-space: nowrap; }
+.size-guide-table caption { text-align: left; margin-bottom: 10px; color: var(--muted); font-size: 10px; }
+.size-guide-table th, .size-guide-table td { padding: 12px 10px; text-align: left; border-bottom: 1px solid var(--line); }
+.size-guide-table thead th { font-weight: 500; text-transform: uppercase; letter-spacing: .07em; font-size: 9px; }
+.size-guide-table tbody th { font-weight: 500; }
+.size-guide-selected { background: #eeeae3; }
+.size-guide-measuring, .size-guide-fit { margin-top: 24px; }
+.size-guide-dialog h3 { margin: 0 0 10px; font-size: 10px; font-weight: 500; text-transform: uppercase; letter-spacing: .12em; }
+.size-guide-measuring p, .size-guide-measuring li, .size-guide-fit p { font-size: 11px; line-height: 1.7; color: var(--muted); }
+.size-guide-measuring ul { padding-left: 17px; margin: 10px 0 0; }
+.size-guide-measuring li { margin-bottom: 5px; }
+.size-guide-measuring strong { font-weight: 500; color: var(--ink); }
+.size-guide-fit p { margin: 0 0 8px; }
+
+@media (max-width: 480px) {
+  .size-guide-dialog { padding: 30px 20px 24px; }
+  .size-guide-dialog h2 { font-size: 28px; }
+  .size-guide-table th, .size-guide-table td { padding: 10px 6px; }
+}

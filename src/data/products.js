@@ -25,15 +25,24 @@ import miroOvershirt from '../images/men/khaki outerwear.jpg';
 import duneShirt from '../images/men/pink collar.jpg';
 import ridgeShirt from '../images/men/white collar.png';
 import ecruKnit from '../images/men/white knitwear.jpg';
+import odetteDress from '../images/women/black dress.jpg';
+import astridShirt from '../images/women/blue collar.jpg';
+import celiaBlouse from '../images/women/blue top.jpg';
+import inesSkirt from '../images/women/brown skirt.jpg';
+import veraTop from '../images/women/brown top.jpg';
+import estelleTrouser from '../images/women/dark brown pants.jpg';
+import miraCardigan from '../images/women/grey top.jpg';
+import rosalieDress from '../images/women/pink dress.jpg';
+import primroseBlouse from '../images/women/yellow top.jpg';
 
 const createProduct = (product) => ({
   sizes: ['XS', 'S', 'M', 'L'],
-  material: 'Considered everyday blend',
+  material: null,
   fit: 'Designed for an easy, considered fit',
   ...product,
 });
 
-export const products = [
+const existingProducts = [
   createProduct({ slug: 'soren-minimalist-hobo-bag', name: 'Soren Minimalist Hobo Bag', price: 'RM 64', wasPrice: 'RM 80', image: hoboBag, group: 'offers', category: 'Accessories', description: 'A softly curved hobo bag with an understated silhouette designed to sit close to the shoulder.', material: 'Textured vegan leather', fit: 'One size', sizes: [] }),
   createProduct({ slug: 'freja-ribbed-sweater-dress', name: 'Freja Two-Tone Ribbed Sweater Dress', price: 'RM 108', wasPrice: 'RM 135', image: sweaterDress, group: 'offers', category: 'Dresses', description: 'A softly ribbed sweater dress in a refined two-tone palette, made for easy autumn layering.', material: 'Soft viscose knit', fit: 'Close through the body with comfortable stretch' }),
   createProduct({ slug: 'sienna-flared-midi-skirt', name: 'Sienna Flared Midi Skirt', price: 'RM 96', wasPrice: 'RM 120', image: siennaSkirt, group: 'offers', category: 'Skirts', description: 'A fluid satin midi skirt that moves easily through the day and settles beautifully at the waist.', material: 'Satin-finish recycled polyester', fit: 'High waist with a fluid A-line shape' }),
@@ -61,6 +70,24 @@ export const products = [
   createProduct({ slug: 'dune-linen-shirt', name: 'Dune Linen Shirt', price: 'RM 89', image: duneShirt, group: 'men', category: 'Shirts', description: 'A pale rose linen shirt that brings a softened note of colour to everyday tailoring.', material: 'Washed linen', fit: 'Relaxed fit with a curved hem', sizes: ['S', 'M', 'L', 'XL'] }),
   createProduct({ slug: 'ridge-textured-camp-shirt', name: 'Ridge Textured Camp Shirt', price: 'RM 94', image: ridgeShirt, group: 'men', category: 'Shirts', description: 'An ivory short-sleeve shirt with subtle woven texture and a clean camp collar.', material: 'Textured cotton blend', fit: 'Easy fit through the body', sizes: ['S', 'M', 'L', 'XL'] }),
   createProduct({ slug: 'ecru-shawl-collar-knit', name: 'Ecru Shawl-Collar Knit', price: 'RM 124', image: ecruKnit, group: 'men', category: 'Knitwear', description: 'A soft ecru knit with a generous shawl collar and a relaxed, layered silhouette.', material: 'Wool and cotton blend', fit: 'Oversized fit with dropped shoulders', sizes: ['S', 'M', 'L', 'XL'] }),
+];
+
+// Prices and size ranges are draft merchandising values until stock is supplied.
+const womensProducts = [
+  { slug: 'odette-two-tone-midi-dress', name: 'Odette Two-Tone Midi Dress', price: 'RM 158', image: odetteDress, category: 'Dresses', description: 'An ivory folded neckline and delicate shoulder straps frame a black midi silhouette. A defined waist opens into a softly flared skirt for considered occasion dressing.', fit: 'Defined waist with a flared midi skirt' },
+  { slug: 'astrid-pinstripe-shirt', name: 'Astrid Pinstripe Shirt', price: 'RM 96', image: astridShirt, category: 'Shirts', description: 'A pale blue shirt traced with fine vertical stripes. The pointed collar, button front, and relaxed sleeves bring quiet structure to everyday tailoring.', fit: 'Relaxed silhouette with long sleeves' },
+  { slug: 'celia-tie-neck-blouse', name: 'Celia Tie-Neck Blouse', price: 'RM 92', image: celiaBlouse, category: 'Tops', description: 'A powder blue blouse with slender neck ties and a neat button front. Its flowing shape sits easily over trousers or tucked into a favourite midi skirt.', fit: 'Easy silhouette with long sleeves' },
+  { slug: 'ines-fold-waist-midi-skirt', name: 'Ines Fold-Waist Midi Skirt', price: 'RM 108', image: inesSkirt, category: 'Skirts', description: 'A warm taupe midi skirt with a sculptural folded waistband and a clean, elongated line. An understated piece that lends definition to simple tops.', fit: 'Defined waist with a straight midi silhouette' },
+  { slug: 'vera-draped-button-top', name: 'Vera Draped Button Top', price: 'RM 84', image: veraTop, category: 'Tops', description: 'A cocoa top with fine vertical texture and an asymmetric button detail. Soft folds gather at the side to create an effortless draped shape.', fit: 'Relaxed upper body with a gathered waist' },
+  { slug: 'estelle-pinstripe-wide-leg-trouser', name: 'Estelle Pinstripe Wide-Leg Trouser', price: 'RM 124', image: estelleTrouser, category: 'Trousers', description: 'Deep brown tailoring with a fine pinstripe and a generous wide leg. Front pleats and a full-length silhouette create a fluid foundation for the modern wardrobe.', fit: 'High waist with a full-length wide leg' },
+  { slug: 'mira-contrast-trim-cardigan', name: 'Mira Contrast-Trim Cardigan', price: 'RM 98', image: miraCardigan, category: 'Knitwear', description: 'A grey button-front cardigan finished with delicate ivory trim at the neckline and cuffs. A softly shaped layer for everyday dressing.', fit: 'Neat silhouette with long sleeves' },
+  { slug: 'rosalie-fold-neck-midi-dress', name: 'Rosalie Fold-Neck Midi Dress', price: 'RM 148', image: rosalieDress, category: 'Dresses', description: 'A blush midi dress with a folded off-shoulder neckline and a slender matching belt. The shaped bodice flows into a gently flared skirt.', fit: 'Shaped bodice with a flared midi skirt' },
+  { slug: 'primrose-volume-sleeve-blouse', name: 'Primrose Volume-Sleeve Blouse', price: 'RM 88', image: primroseBlouse, category: 'Tops', description: 'A pale yellow blouse with a pointed collar and softly gathered sleeves. Its open neckline and clean front bring a light touch to tailored separates.', fit: 'Relaxed silhouette with gathered three-quarter sleeves' },
+];
+
+export const products = [
+  ...existingProducts,
+  ...womensProducts.map((product) => createProduct({ ...product, group: 'women' })),
 ];
 
 export const productsByGroup = (group) => products.filter((product) => product.group === group);

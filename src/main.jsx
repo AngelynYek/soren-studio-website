@@ -28,13 +28,23 @@ import { cleanSearchQuery } from './search/search';
 import ShopAllPage from './shop/ShopAllPage';
 import { normalizeShopFilter } from './shop/shop';
 import { parseProductRoute, productHash } from './navigation/productRoutes';
+import InformationPage from './information/InformationPage';
+import { CONTACT_EMAIL, informationPages, informationPageKey } from './information/pages';
 
 const photo = (id, width = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
 const offers = featuredProductsByGroup('offers');
 const icons = featuredProductsByGroup('icons');
-const utilityPages = new Set(['cart', 'checkout', 'receipt', 'account', 'search', 'shop']);
+const utilityPages = new Set([
+  'cart',
+  'checkout',
+  'receipt',
+  'account',
+  'search',
+  'shop',
+  'information',
+]);
 
 function Header({ bagCount, onShowCollection, onShowHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -216,7 +226,6 @@ function SignupBanner() {
             <ArrowRight size={16} />
           </button>
         </form>
-        <small>By subscribing, you agree to our Privacy Policy.</small>
       </div>
       <div className="signup-image" role="img" aria-label="Neutral garments on a rail" />
     </section>
@@ -253,13 +262,15 @@ function Footer({ onShowNewCollection, onShowHome }) {
           New arrivals
         </button>
         <a href="#shop-all">Shop all</a>
-        <a href="#essentials">Our story</a>
+        <a href={informationPages.story.hash}>{informationPages.story.title}</a>
       </div>
       <div className="footer-column">
         <h3>Client care</h3>
-        <a href="#shipping">Shipping & returns</a>
-        <a href="#faq">FAQs</a>
-        <a href="#contact">Contact us</a>
+        {['shipping', 'faq', 'contact'].map((key) => (
+          <a key={key} href={informationPages[key].hash}>
+            {informationPages[key].title}
+          </a>
+        ))}
       </div>
       <div className="footer-column">
         <h3>Find us</h3>
@@ -268,14 +279,10 @@ function Footer({ onShowNewCollection, onShowHome }) {
           <br />
           9am – 5pm EST
         </p>
-        <a href="mailto:hello@soren.studio">hello@soren.studio</a>
+        <a href={`mailto:${CONTACT_EMAIL}`}>{CONTACT_EMAIL}</a>
       </div>
       <div className="footer-bottom">
         <span>© 2025 Soren Studio. All rights reserved.</span>
-        <div>
-          <a href="#privacy">Privacy</a>
-          <a href="#terms">Terms</a>
-        </div>
         <span>Made with intention.</span>
       </div>
     </footer>
@@ -486,6 +493,8 @@ function App() {
     if (path === '#search') return { page: 'search', query: cleanSearchQuery(params.get('q')) };
     if (path === '#shop-all')
       return { page: 'shop', filter: normalizeShopFilter(params.get('department')) };
+    const pageKey = informationPageKey(path);
+    if (pageKey) return { page: 'information', pageKey };
     const productRoute = parseProductRoute(path, params);
     if (productRoute) return productRoute;
     const collectionRoute = Object.keys(collections).find(
@@ -519,6 +528,8 @@ function App() {
   };
   const renderUtilityPage = () => {
     switch (route.page) {
+      case 'information':
+        return <InformationPage key={route.pageKey} pageKey={route.pageKey} />;
       case 'shop':
         return <ShopAllPage filter={route.filter} onShowProduct={showProduct} />;
       case 'search':

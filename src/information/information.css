@@ -1,0 +1,139 @@
+.information-page {
+  background: var(--paper);
+  padding: clamp(58px, 8vw, 104px) 24px clamp(72px, 9vw, 120px);
+}
+
+.information-heading {
+  max-width: 760px;
+  margin: 0 auto clamp(40px, 6vw, 64px);
+  text-align: center;
+}
+
+.information-heading h1 {
+  margin: 0 0 20px;
+  font: 400 clamp(32px, 4.1vw, 54px)/1.1 var(--serif);
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+
+.information-heading > p:last-child {
+  max-width: 380px;
+  margin: 0 auto;
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+}
+
+.information-content {
+  max-width: 640px;
+  margin: 0 auto;
+}
+
+.information-section {
+  border-top: 1px solid var(--line);
+  padding: 28px 0;
+}
+
+.information-section h2 {
+  margin: 0 0 14px;
+  font: 400 24px/1.2 var(--serif);
+}
+
+.information-section p,
+.information-question p {
+  margin: 0 0 14px;
+  color: var(--muted);
+  font-size: 13px;
+  line-height: 1.8;
+}
+
+.information-section p:last-child {
+  margin-bottom: 0;
+}
+
+.information-email {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  padding: 8px 0;
+  font-size: 15px;
+  border-bottom: 1px solid var(--ink);
+  overflow-wrap: anywhere;
+}
+
+.information-question {
+  border-top: 1px solid var(--line);
+}
+
+.information-question:last-child {
+  border-bottom: 1px solid var(--line);
+}
+
+.information-question summary {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20px;
+  padding: 24px 0;
+  font-size: 13px;
+  line-height: 1.5;
+  list-style: none;
+  cursor: pointer;
+}
+
+.information-question summary::-webkit-details-marker {
+  display: none;
+}
+
+.information-question summary svg {
+  flex-shrink: 0;
+}
+
+.information-question[open] summary svg {
+  transform: rotate(45deg);
+}
+
+.information-question p {
+  padding: 0 36px 12px 0;
+}
+
+.information-next {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 24px;
+  margin-top: 36px;
+}
+
+.information-next .button {
+  min-height: 44px;
+}
+
+.information-email:hover,
+.information-question summary:hover {
+  color: var(--muted);
+}
+
+.information-page a:focus-visible,
+.information-question summary:focus-visible {
+  outline: 1px solid var(--ink);
+  outline-offset: 5px;
+}
+
+.information-page + .footer {
+  background: #f6f4f0;
+}
+
+@media (max-width: 760px) {
+  .information-page {
+    padding: 56px 20px 72px;
+  }
+
+  .information-section {
+    padding: 24px 0;
+  }
+
+  .information-question summary {
+    padding: 22px 0;
+  }
+}

@@ -20,6 +20,8 @@ import { CartProvider, useCart } from './cart/CartProvider';
 import CartPage from './cart/CartPage';
 import CheckoutPage from './cart/CheckoutPage';
 import CheckoutResult from './cart/CheckoutResult';
+import { AccountProvider, useAccount } from './account/AccountProvider';
+import AccountPage from './account/AccountPage';
 
 const photo = (id, width = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
@@ -29,6 +31,12 @@ const icons = featuredProductsByGroup('icons');
 
 function Header({ bagCount, onShowCollection, onShowHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
+  const { profile } = useAccount();
+  const openAccount = () => {
+    setMenuOpen(false);
+    window.location.hash = 'account';
+    window.scrollTo(0, 0);
+  };
   const openBag = () => {
     setMenuOpen(false);
     window.location.hash = 'cart';
@@ -75,7 +83,12 @@ function Header({ bagCount, onShowCollection, onShowHome }) {
           <button className="icon-button search-button" aria-label="Search">
             <Search />
           </button>
-          <button className="icon-button account-button" aria-label="Account">
+          <button
+            type="button"
+            className={`icon-button account-button${profile ? ' account-signed-in' : ''}`}
+            aria-label={profile ? `Account, ${profile.name}` : 'Account'}
+            onClick={openAccount}
+          >
             <UserRound />
           </button>
           <button
@@ -465,6 +478,8 @@ function App() {
     if (path === '#checkout/success')
       return { page: 'receipt', orderId: params.get('order') ?? '' };
     if (path === '#checkout') return { page: 'checkout' };
+    if (path === '#account') return { page: 'account', mode: 'sign-in' };
+    if (path === '#account/create') return { page: 'account', mode: 'create' };
     const productSlug = window.location.hash.match(/^#product\/(.+)$/)?.[1];
     if (productSlug) return { page: 'product', productSlug };
     const collectionRoute = Object.keys(collections).find(
@@ -478,7 +493,8 @@ function App() {
     const syncRoute = () => {
       const nextRoute = getCurrentRoute();
       setRoute(nextRoute);
-      if (['cart', 'checkout', 'receipt'].includes(nextRoute.page)) window.scrollTo(0, 0);
+      if (['cart', 'checkout', 'receipt', 'account'].includes(nextRoute.page))
+        window.scrollTo(0, 0);
     };
     window.addEventListener('hashchange', syncRoute);
     return () => window.removeEventListener('hashchange', syncRoute);
@@ -496,11 +512,13 @@ function App() {
     window.location.hash = `product/${slug}`;
     window.scrollTo(0, 0);
   };
-  if (['cart', 'checkout', 'receipt'].includes(route.page))
+  if (['cart', 'checkout', 'receipt', 'account'].includes(route.page))
     return (
       <div id="top">
         <Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} />
-        {route.page === 'cart' ? (
+        {route.page === 'account' ? (
+          <AccountPage key={route.mode} mode={route.mode} />
+        ) : route.page === 'cart' ? (
           <CartPage onShowHome={showHome} onShowProduct={showProduct} cancelled={route.cancelled} />
         ) : route.page === 'checkout' ? (
           <CheckoutPage />
@@ -569,8 +587,10 @@ function App() {
 
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <CartProvider>
-      <App />
-    </CartProvider>
+    <AccountProvider>
+      <CartProvider>
+        <App />
+      </CartProvider>
+    </AccountProvider>
   </React.StrictMode>,
 );

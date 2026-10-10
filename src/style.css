@@ -503,8 +503,7 @@ input {
     width: 15px;
     height: 15px;
   }
-  .search-button,
-  .account-button {
+  .search-button {
     display: none;
   }
   .hero {

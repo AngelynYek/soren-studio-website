@@ -22,16 +22,25 @@ import CheckoutPage from './cart/CheckoutPage';
 import CheckoutResult from './cart/CheckoutResult';
 import { AccountProvider, useAccount } from './account/AccountProvider';
 import AccountPage from './account/AccountPage';
+import ProductGrid from './components/ProductGrid';
+import SearchPage from './search/SearchPage';
+import { cleanSearchQuery } from './search/search';
 
 const photo = (id, width = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
 const offers = featuredProductsByGroup('offers');
 const icons = featuredProductsByGroup('icons');
+const utilityPages = new Set(['cart', 'checkout', 'receipt', 'account', 'search']);
 
 function Header({ bagCount, onShowCollection, onShowHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
   const { profile } = useAccount();
+  const openSearch = () => {
+    setMenuOpen(false);
+    window.location.hash = 'search';
+    window.scrollTo(0, 0);
+  };
   const openAccount = () => {
     setMenuOpen(false);
     window.location.hash = 'account';
@@ -80,7 +89,12 @@ function Header({ bagCount, onShowCollection, onShowHome }) {
           SOREN
         </button>
         <div className="header-actions">
-          <button className="icon-button search-button" aria-label="Search">
+          <button
+            type="button"
+            className="icon-button search-button"
+            aria-label="Search"
+            onClick={openSearch}
+          >
             <Search />
           </button>
           <button
@@ -126,37 +140,6 @@ function Hero({ onShowNewCollection }) {
       </div>
       <span className="image-credit">Quiet mornings. Longer walks.</span>
     </section>
-  );
-}
-
-function ProductCard({ item, onShowProduct, label = 'Soren edit' }) {
-  return (
-    <article className="product-card">
-      <button type="button" className="product-image" onClick={() => onShowProduct(item.slug)}>
-        <img src={item.image} alt={item.name} loading="lazy" />
-        <span className="product-tag">{label}</span>
-      </button>
-      <div className="product-info">
-        <div>
-          <button type="button" className="product-name" onClick={() => onShowProduct(item.slug)}>
-            {item.name}
-          </button>
-          <p>
-            <ProductPrice price={item.price} wasPrice={item.wasPrice} />
-          </p>
-        </div>
-      </div>
-    </article>
-  );
-}
-
-function ProductGrid({ items, onShowProduct, label, compact = false }) {
-  return (
-    <div className={`product-grid ${compact ? 'three-up' : ''}`}>
-      {items.map((item) => (
-        <ProductCard key={item.slug} item={item} onShowProduct={onShowProduct} label={label} />
-      ))}
-    </div>
   );
 }
 
@@ -480,6 +463,7 @@ function App() {
     if (path === '#checkout') return { page: 'checkout' };
     if (path === '#account') return { page: 'account', mode: 'sign-in' };
     if (path === '#account/create') return { page: 'account', mode: 'create' };
+    if (path === '#search') return { page: 'search', query: cleanSearchQuery(params.get('q')) };
     const productSlug = window.location.hash.match(/^#product\/(.+)$/)?.[1];
     if (productSlug) return { page: 'product', productSlug };
     const collectionRoute = Object.keys(collections).find(
@@ -493,8 +477,7 @@ function App() {
     const syncRoute = () => {
       const nextRoute = getCurrentRoute();
       setRoute(nextRoute);
-      if (['cart', 'checkout', 'receipt', 'account'].includes(nextRoute.page))
-        window.scrollTo(0, 0);
+      if (utilityPages.has(nextRoute.page)) window.scrollTo(0, 0);
     };
     window.addEventListener('hashchange', syncRoute);
     return () => window.removeEventListener('hashchange', syncRoute);
@@ -512,19 +495,29 @@ function App() {
     window.location.hash = `product/${slug}`;
     window.scrollTo(0, 0);
   };
-  if (['cart', 'checkout', 'receipt', 'account'].includes(route.page))
+  const renderUtilityPage = () => {
+    switch (route.page) {
+      case 'search':
+        return <SearchPage key={route.query} query={route.query} onShowProduct={showProduct} />;
+      case 'account':
+        return <AccountPage key={route.mode} mode={route.mode} />;
+      case 'cart':
+        return (
+          <CartPage onShowHome={showHome} onShowProduct={showProduct} cancelled={route.cancelled} />
+        );
+      case 'checkout':
+        return <CheckoutPage />;
+      case 'receipt':
+        return <CheckoutResult orderId={route.orderId} onShowHome={showHome} />;
+      default:
+        return null;
+    }
+  };
+  if (utilityPages.has(route.page))
     return (
       <div id="top">
         <Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} />
-        {route.page === 'account' ? (
-          <AccountPage key={route.mode} mode={route.mode} />
-        ) : route.page === 'cart' ? (
-          <CartPage onShowHome={showHome} onShowProduct={showProduct} cancelled={route.cancelled} />
-        ) : route.page === 'checkout' ? (
-          <CheckoutPage />
-        ) : (
-          <CheckoutResult orderId={route.orderId} onShowHome={showHome} />
-        )}
+        {renderUtilityPage()}
         <Footer onShowNewCollection={showNewCollection} onShowHome={showHome} />
         <BackToTop />
       </div>

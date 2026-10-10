@@ -503,9 +503,6 @@ input {
     width: 15px;
     height: 15px;
   }
-  .search-button {
-    display: none;
-  }
   .hero {
     height: 570px;
     max-height: calc(100svh - 94px);

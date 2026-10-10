@@ -17,7 +17,7 @@ export const offerProducts = [
     price: 'RM 64',
     wasPrice: 'RM 80',
     image: hoboBag,
-    category: 'Accessories',
+    category: 'Bags',
     description:
       'A softly curved hobo bag with an understated silhouette designed to sit close to the shoulder.',
     material: 'Textured vegan leather',

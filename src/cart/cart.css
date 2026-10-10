@@ -221,8 +221,6 @@
   font-size: 11px;
   color: var(--muted);
   line-height: 1.7;
-}
-.checkout-review p {
   margin: 6px 0 0;
 }
 .checkout-review li > span {

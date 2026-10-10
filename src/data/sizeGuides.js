@@ -18,10 +18,22 @@ const bodyCharts = {
 };
 
 const measurementDetails = {
-  bust: { label: 'Bust', instruction: 'Measure around the fullest part of your bust, keeping the tape level.' },
-  chest: { label: 'Chest', instruction: 'Measure around the fullest part of your chest, keeping the tape level.' },
-  waist: { label: 'Waist', instruction: 'Measure around your natural waist, without pulling the tape tight.' },
-  hips: { label: 'Hips', instruction: 'With feet together, measure around the fullest part of your hips.' },
+  bust: {
+    label: 'Bust',
+    instruction: 'Measure around the fullest part of your bust, keeping the tape level.',
+  },
+  chest: {
+    label: 'Chest',
+    instruction: 'Measure around the fullest part of your chest, keeping the tape level.',
+  },
+  waist: {
+    label: 'Waist',
+    instruction: 'Measure around your natural waist, without pulling the tape tight.',
+  },
+  hips: {
+    label: 'Hips',
+    instruction: 'With feet together, measure around the fullest part of your hips.',
+  },
 };
 
 const categoryMeasurements = {
@@ -35,7 +47,8 @@ const categoryMeasurements = {
   Trousers: ['waist', 'hips'],
 };
 
-export const sizeGuideNotice = 'Sample sizing for this personal demo. These are illustrative body measurements, not verified garment measurements.';
+export const sizeGuideNotice =
+  'Sample sizing for this personal demo. These are illustrative body measurements, not verified garment measurements.';
 
 // Override sizeProfile on a product when it differs from its collection default.
 // Unsupported categories/sizes have no guide rather than displaying a wrong chart.
@@ -48,7 +61,7 @@ export function getSizeGuide(product) {
   if (!chart || product.sizes.some((size) => !chart[size])) return null;
 
   const columns = measurementKeys.map((key) => {
-    const resolvedKey = key === 'upperBody' ? profile === 'men' ? 'chest' : 'bust' : key;
+    const resolvedKey = key === 'upperBody' ? (profile === 'men' ? 'chest' : 'bust') : key;
     return { key: resolvedKey, ...measurementDetails[resolvedKey] };
   });
 
@@ -63,6 +76,6 @@ export function getSizeGuide(product) {
 }
 
 export function formatMeasurementRange(range, unit = 'cm') {
-  const format = (value) => unit === 'in' ? (value / 2.54).toFixed(1) : String(value);
+  const format = (value) => (unit === 'in' ? (value / 2.54).toFixed(1) : String(value));
   return range.map(format).join('–');
 }

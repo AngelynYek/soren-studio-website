@@ -57,6 +57,12 @@ test('iconic collection preserves homepage products and includes each new photo 
       assert.match(markup, /Sample sizing for this personal demo/);
     }
     assert.equal(getSizeGuide(productBySlug('lucien-waffle-texture-shirt')).profile, 'men');
+    const espressoGuide = getSizeGuide(productBySlug('espresso-oversized-longline-coat'));
+    assert.equal(espressoGuide.profile, 'women');
+    assert.deepEqual(
+      espressoGuide.columns.map((column) => column.key),
+      ['bust', 'waist'],
+    );
     assert.deepEqual(
       getSizeGuide(productBySlug('adrienne-double-breasted-suit-set')).columns.map(
         (column) => column.key,

@@ -25,13 +25,16 @@ import AccountPage from './account/AccountPage';
 import ProductGrid from './components/ProductGrid';
 import SearchPage from './search/SearchPage';
 import { cleanSearchQuery } from './search/search';
+import ShopAllPage from './shop/ShopAllPage';
+import { normalizeShopFilter } from './shop/shop';
+import { parseProductRoute, productHash } from './navigation/productRoutes';
 
 const photo = (id, width = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
 
 const offers = featuredProductsByGroup('offers');
 const icons = featuredProductsByGroup('icons');
-const utilityPages = new Set(['cart', 'checkout', 'receipt', 'account', 'search']);
+const utilityPages = new Set(['cart', 'checkout', 'receipt', 'account', 'search', 'shop']);
 
 function Header({ bagCount, onShowCollection, onShowHome }) {
   const [menuOpen, setMenuOpen] = useState(false);
@@ -249,7 +252,7 @@ function Footer({ onShowNewCollection, onShowHome }) {
         >
           New arrivals
         </button>
-        <a href="#offers">Shop all</a>
+        <a href="#shop-all">Shop all</a>
         <a href="#essentials">Our story</a>
       </div>
       <div className="footer-column">
@@ -339,7 +342,15 @@ function CollectionPage({
   );
 }
 
-function ProductPage({ item, bagCount, onShowNewCollection, onShowCollection, onShowHome, onAdd }) {
+function ProductPage({
+  item,
+  bagCount,
+  onShowNewCollection,
+  onShowCollection,
+  onShowHome,
+  onAdd,
+  returnTo,
+}) {
   const [selectedSize, setSelectedSize] = useState('');
   const [added, setAdded] = useState(false);
   const [addError, setAddError] = useState('');
@@ -352,8 +363,17 @@ function ProductPage({ item, bagCount, onShowNewCollection, onShowCollection, on
   };
 
   const collection = collections[item.group];
-  const returnToCollection = collection ? () => onShowCollection(item.group) : onShowHome;
-  const backLabel = collection?.backLabel ?? 'home';
+  const goBack = () => {
+    if (returnTo) {
+      window.location.hash = returnTo.hash;
+      window.scrollTo(0, 0);
+    } else if (collection) {
+      onShowCollection(item.group);
+    } else {
+      onShowHome();
+    }
+  };
+  const backLabel = returnTo?.label ?? collection?.backLabel ?? 'home';
   const collectionLabel = collection ? collection.title : `Soren Studio · ${item.category}`;
   const addToBagLabel = added
     ? hasSizes
@@ -368,7 +388,7 @@ function ProductPage({ item, bagCount, onShowNewCollection, onShowCollection, on
     <div id="top">
       <Header bagCount={bagCount} onShowCollection={onShowCollection} onShowHome={onShowHome} />
       <main className="product-page">
-        <button type="button" className="product-back" onClick={returnToCollection}>
+        <button type="button" className="product-back" onClick={goBack}>
           ← Back to {backLabel}
         </button>
         <div className="product-detail">
@@ -464,8 +484,10 @@ function App() {
     if (path === '#account') return { page: 'account', mode: 'sign-in' };
     if (path === '#account/create') return { page: 'account', mode: 'create' };
     if (path === '#search') return { page: 'search', query: cleanSearchQuery(params.get('q')) };
-    const productSlug = window.location.hash.match(/^#product\/(.+)$/)?.[1];
-    if (productSlug) return { page: 'product', productSlug };
+    if (path === '#shop-all')
+      return { page: 'shop', filter: normalizeShopFilter(params.get('department')) };
+    const productRoute = parseProductRoute(path, params);
+    if (productRoute) return productRoute;
     const collectionRoute = Object.keys(collections).find(
       (key) => collections[key].hash === window.location.hash,
     );
@@ -491,12 +513,14 @@ function App() {
     window.location.hash = '';
     window.scrollTo(0, 0);
   };
-  const showProduct = (slug) => {
-    window.location.hash = `product/${slug}`;
+  const showProduct = (slug, shopFilter) => {
+    window.location.hash = productHash(slug, shopFilter);
     window.scrollTo(0, 0);
   };
   const renderUtilityPage = () => {
     switch (route.page) {
+      case 'shop':
+        return <ShopAllPage filter={route.filter} onShowProduct={showProduct} />;
       case 'search':
         return <SearchPage key={route.query} query={route.query} onShowProduct={showProduct} />;
       case 'account':
@@ -528,6 +552,7 @@ function App() {
       <ProductPage
         key={selectedProduct.slug}
         item={selectedProduct}
+        returnTo={route.returnTo}
         bagCount={bagCount}
         onShowNewCollection={showNewCollection}
         onShowCollection={showCollection}

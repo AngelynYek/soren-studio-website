@@ -73,7 +73,7 @@ export const iconicProducts = [
   },
   {
     slug: 'espresso-oversized-longline-coat',
-    sizeProfile: 'men',
+    sizeProfile: 'women',
     name: 'Espresso Oversized Longline Coat',
     price: 'RM 190',
     image: espressoCoat,

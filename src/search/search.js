@@ -1,3 +1,5 @@
+import { ACCESSORY_CATEGORIES } from '../data/productDepartments.js';
+
 export const MAX_QUERY_LENGTH = 120;
 export const RESULTS_PER_PAGE = 12;
 
@@ -19,7 +21,7 @@ const categorySearches = [
   { terms: ['scarf', 'scarves'], categories: ['Scarves'] },
   {
     terms: ['accessory', 'accessories'],
-    categories: ['Accessories', 'Bags', 'Belts', 'Jewellery', 'Eyewear', 'Hats', 'Scarves'],
+    categories: ACCESSORY_CATEGORIES,
   },
 ];
 

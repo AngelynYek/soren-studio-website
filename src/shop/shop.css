@@ -1,0 +1,107 @@
+.shop-toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 20px;
+  padding-bottom: 24px;
+  margin-bottom: 32px;
+  border-bottom: 1px solid var(--line);
+}
+
+.shop-filters {
+  margin: 0;
+  padding: 0;
+  border: 0;
+  min-width: 0;
+}
+
+.shop-filters legend {
+  padding: 0;
+  margin-bottom: 12px;
+  font-size: 9px;
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+}
+
+.shop-filter-options {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.shop-filter {
+  position: relative;
+  cursor: pointer;
+}
+
+.shop-filter > span {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  min-height: 44px;
+  padding: 12px 18px;
+  border: 1px solid var(--line);
+  color: var(--ink);
+  background: var(--paper);
+  font-size: 11px;
+  transition:
+    border-color 0.2s,
+    background 0.2s,
+    color 0.2s;
+}
+
+.shop-filter:hover > span {
+  border-color: var(--ink);
+}
+
+.shop-filter input:checked + span {
+  border-color: var(--ink);
+  background: var(--ink);
+  color: var(--paper);
+}
+
+.shop-filter-count {
+  opacity: 0.75;
+}
+
+.shop-filter input:focus-visible + span,
+.shop-all-page button:focus-visible,
+.shop-all-page a:focus-visible {
+  outline: 2px solid var(--ink);
+  outline-offset: 4px;
+}
+
+.shop-result-count {
+  margin: 0 0 12px;
+  font-size: 11px;
+  color: var(--muted);
+}
+
+.shop-pagination,
+.shop-empty {
+  text-align: center;
+  margin-top: 40px;
+}
+
+.shop-pagination p,
+.shop-empty p {
+  color: var(--muted);
+  font-size: 12px;
+  line-height: 1.7;
+  margin-bottom: 20px;
+}
+
+.shop-empty h2 {
+  font: 400 26px var(--serif);
+}
+
+@media (max-width: 480px) {
+  .shop-filter > span {
+    padding: 12px;
+  }
+
+  .shop-result-count {
+    margin-bottom: 0;
+  }
+}

@@ -1,6 +1,6 @@
-import hoboBag from "../images/The Under-the-Radar Handbag Fashion People and Editors Can't Stop Carrying.jpg";
+import hoboBag from '../images/yellowbag.jpg';
 import sweaterDress from '../images/Drei Master.jpg';
-import siennaSkirt from '../images/Gonna Midi in Raso - VariationMaster _ Atelier Emé.jpg';
+import siennaSkirt from '../images/brownmidiskirt.jpg';
 import leonieSet from '../images/offer/brown set.jpg';
 import lindenPolo from '../images/offer/green top.jpg';
 import amelieScarf from '../images/offer/head scarf.jpg';

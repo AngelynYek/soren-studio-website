@@ -2,6 +2,8 @@ export const CONTACT_EMAIL = 'hello@soren.studio';
 
 export const informationPages = {
   story: {
+    metaDescription:
+      'Discover the story behind Soren Studio, a quieter approach to the everyday wardrobe built on timeless silhouettes, soft textures and a restrained palette.',
     hash: '#our-story',
     title: 'Our story',
     eyebrow: 'Soren Studio · Made with intention',
@@ -24,6 +26,8 @@ export const informationPages = {
     link: { label: 'Explore the complete edit', href: '#shop-all' },
   },
   shipping: {
+    metaDescription:
+      'Read how ordering, delivery, shipping costs and returns work at Soren Studio, including what to expect from the preview checkout.',
     hash: '#shipping',
     title: 'Shipping & returns',
     eyebrow: 'Soren Studio · Client care',
@@ -57,6 +61,8 @@ export const informationPages = {
     link: { label: 'Read the FAQs', href: '#faq' },
   },
   faq: {
+    metaDescription:
+      'Find answers about sizing, your shopping bag, checkout, accounts, currency and order confirmations at Soren Studio.',
     hash: '#faq',
     title: 'FAQs',
     eyebrow: 'Soren Studio · A little guidance',
@@ -96,6 +102,8 @@ export const informationPages = {
     link: { label: 'Contact us', href: '#contact' },
   },
   contact: {
+    metaDescription:
+      'Get in touch with Soren Studio by email with questions about the collections, sizing or your experience.',
     hash: '#contact',
     title: 'Contact us',
     eyebrow: 'Soren Studio · In conversation',

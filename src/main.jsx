@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import { createRoot } from 'react-dom/client';
+import { Helmet, HelmetProvider } from 'react-helmet-async';
 import {
   Search,
   UserRound,
@@ -30,6 +31,7 @@ import { normalizeShopFilter } from './shop/shop';
 import { parseProductRoute, productHash } from './navigation/productRoutes';
 import InformationPage from './information/InformationPage';
 import { CONTACT_EMAIL, informationPages, informationPageKey } from './information/pages';
+import { getPageMeta } from './seo/pageMeta';
 
 const photo = (id, width = 900) =>
   `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=85`;
@@ -253,7 +255,7 @@ function Footer({ onShowNewCollection, onShowHome }) {
         </div>
       </div>
       <div className="footer-column">
-        <h3>Explore</h3>
+        <h2>Explore</h2>
         <button
           type="button"
           className="navigation-button footer-link"
@@ -265,7 +267,7 @@ function Footer({ onShowNewCollection, onShowHome }) {
         <a href={informationPages.story.hash}>{informationPages.story.title}</a>
       </div>
       <div className="footer-column">
-        <h3>Client care</h3>
+        <h2>Client care</h2>
         {['shipping', 'faq', 'contact'].map((key) => (
           <a key={key} href={informationPages[key].hash}>
             {informationPages[key].title}
@@ -273,7 +275,7 @@ function Footer({ onShowNewCollection, onShowHome }) {
         ))}
       </div>
       <div className="footer-column">
-        <h3>Find us</h3>
+        <h2>Find us</h2>
         <p>
           Monday – Friday
           <br />
@@ -548,78 +550,95 @@ function App() {
         return null;
     }
   };
-  if (utilityPages.has(route.page))
+  const selectedProduct = route.page === 'product' ? productBySlug(route.productSlug) : null;
+  const renderPage = () => {
+    if (utilityPages.has(route.page))
+      return (
+        <div id="top">
+          <Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} />
+          {renderUtilityPage()}
+          <Footer onShowNewCollection={showNewCollection} onShowHome={showHome} />
+          <BackToTop />
+        </div>
+      );
+    if (selectedProduct)
+      return (
+        <ProductPage
+          key={selectedProduct.slug}
+          item={selectedProduct}
+          returnTo={route.returnTo}
+          bagCount={bagCount}
+          onShowNewCollection={showNewCollection}
+          onShowCollection={showCollection}
+          onShowHome={showHome}
+          onAdd={addToBag}
+        />
+      );
+    const collection = collections[route.page];
+    if (collection)
+      return (
+        <CollectionPage
+          bagCount={bagCount}
+          onShowNewCollection={showNewCollection}
+          onShowCollection={showCollection}
+          onShowHome={showHome}
+          onShowProduct={showProduct}
+          items={productsByGroup(collection.group)}
+          {...collection}
+        />
+      );
     return (
       <div id="top">
         <Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} />
-        {renderUtilityPage()}
+        <main>
+          <Hero onShowNewCollection={showNewCollection} />
+          <ProductSection
+            title="Exclusive offers"
+            items={offers}
+            id="offers"
+            onShowProduct={showProduct}
+            onViewAll={() => showCollection('offers')}
+            label={collections.offers.label}
+            compact
+          />
+          <EssentialsBanner onShowBasics={() => showCollection('basics')} />
+          <ProductSection
+            title="Iconic pieces"
+            items={icons}
+            id="icons"
+            onShowProduct={showProduct}
+            onViewAll={() => showCollection('icons')}
+            label={collections.icons.label}
+          />
+          <SignupBanner />
+        </main>
         <Footer onShowNewCollection={showNewCollection} onShowHome={showHome} />
-        <BackToTop />
       </div>
     );
-  const selectedProduct = route.page === 'product' ? productBySlug(route.productSlug) : null;
-  if (selectedProduct)
-    return (
-      <ProductPage
-        key={selectedProduct.slug}
-        item={selectedProduct}
-        returnTo={route.returnTo}
-        bagCount={bagCount}
-        onShowNewCollection={showNewCollection}
-        onShowCollection={showCollection}
-        onShowHome={showHome}
-        onAdd={addToBag}
-      />
-    );
-  const collection = collections[route.page];
-  if (collection)
-    return (
-      <CollectionPage
-        bagCount={bagCount}
-        onShowNewCollection={showNewCollection}
-        onShowCollection={showCollection}
-        onShowHome={showHome}
-        onShowProduct={showProduct}
-        items={productsByGroup(collection.group)}
-        {...collection}
-      />
-    );
+  };
+  const meta = getPageMeta(route, selectedProduct);
   return (
-    <div id="top">
-      <Header bagCount={bagCount} onShowCollection={showCollection} onShowHome={showHome} />
-      <main>
-        <Hero onShowNewCollection={showNewCollection} />
-        <ProductSection
-          title="Exclusive offers"
-          items={offers}
-          id="offers"
-          onShowProduct={showProduct}
-          onViewAll={() => showCollection('offers')}
-          label={collections.offers.label}
-          compact
-        />
-        <EssentialsBanner onShowBasics={() => showCollection('basics')} />
-        <ProductSection
-          title="Iconic pieces"
-          items={icons}
-          id="icons"
-          onShowProduct={showProduct}
-          onViewAll={() => showCollection('icons')}
-          label={collections.icons.label}
-        />
-        <SignupBanner />
-      </main>
-      <Footer onShowNewCollection={showNewCollection} onShowHome={showHome} />
-    </div>
+    <>
+      <Helmet>
+        <title>{meta.title}</title>
+        <meta name="description" content={meta.description} />
+      </Helmet>
+      {renderPage()}
+    </>
   );
 }
 
+// React adds each page's title and description itself, so the static fallbacks must not sit beside them.
+document.querySelectorAll('title, meta[name="description"]').forEach((tag) => tag.remove());
+
 createRoot(document.getElementById('root')).render(
   <React.StrictMode>
-    <AccountProvider>
-      <CartProvider>
-        <App />
-      </CartProvider>
-    </AccountProvider>
+    <HelmetProvider>
+      <AccountProvider>
+        <CartProvider>
+          <App />
+        </CartProvider>
+      </AccountProvider>
+    </HelmetProvider>
   </React.StrictMode>,
 );

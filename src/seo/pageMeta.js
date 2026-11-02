@@ -1,0 +1,96 @@
+import { collections } from '../data/collections.js';
+import { informationPages } from '../information/pages.js';
+
+// index.html repeats this record so the homepage is complete before JavaScript runs.
+export const homeMeta = {
+  title: 'Soren Studio — Modern essentials',
+  description:
+    'Shop Soren Studio for timeless men’s and women’s clothing and accessories in soft neutrals, from the new autumn collection to everyday basics.',
+};
+
+const shopMeta = {
+  all: {
+    title: 'Shop all',
+    description:
+      'Browse the complete Soren Studio catalog of men’s and women’s clothing and accessories, all in one timeless wardrobe.',
+  },
+  men: {
+    title: 'Shop all men’s clothing',
+    description:
+      'Browse every men’s piece at Soren Studio, from tailored trousers and overshirts to shirts, tees and knitwear.',
+  },
+  women: {
+    title: 'Shop all women’s clothing',
+    description:
+      'Browse every women’s piece at Soren Studio, from midi dresses and skirts to blouses, knitwear and outerwear.',
+  },
+  accessories: {
+    title: 'Shop all accessories',
+    description:
+      'Browse every Soren Studio accessory, from bags and belts to sunglasses, hats, scarves and jewellery.',
+  },
+};
+
+const accountMeta = {
+  'sign-in': {
+    title: 'Your account',
+    description: 'Sign in to your Soren Studio profile or view your account details.',
+  },
+  create: {
+    title: 'Create an account',
+    description: 'Create a Soren Studio profile to keep your details together in this browser.',
+  },
+};
+
+const utilityMeta = {
+  cart: {
+    title: 'Shopping bag',
+    description:
+      'Review the pieces in your Soren Studio shopping bag, adjust quantities and continue to checkout.',
+  },
+  checkout: {
+    title: 'Checkout',
+    description:
+      'Add your contact and delivery details to complete your Soren Studio order with a sample payment method.',
+  },
+  receipt: {
+    title: 'Order confirmation',
+    description: 'View the confirmation and details of your latest Soren Studio order.',
+  },
+};
+
+const searchDescription =
+  'Search the Soren Studio catalog by product name, clothing type or other details to find your next favourite piece.';
+
+const withSiteName = ({ title, description }) => ({
+  title: `${title} — Soren Studio`,
+  description,
+});
+
+export function getPageMeta(route, product = null) {
+  switch (route.page) {
+    case 'information': {
+      const { title, metaDescription } = informationPages[route.pageKey];
+      return withSiteName({ title, description: metaDescription });
+    }
+    case 'shop':
+      return withSiteName(shopMeta[route.filter]);
+    case 'search':
+      return withSiteName({
+        title: route.query ? `Search results for “${route.query}”` : 'Search',
+        description: searchDescription,
+      });
+    case 'account':
+      return withSiteName(accountMeta[route.mode]);
+    case 'cart':
+    case 'checkout':
+    case 'receipt':
+      return withSiteName(utilityMeta[route.page]);
+    default:
+  }
+  if (product) return withSiteName({ title: product.name, description: product.description });
+  const collection = collections[route.page];
+  if (collection)
+    return withSiteName({ title: collection.title, description: collection.metaDescription });
+  return homeMeta;
+}

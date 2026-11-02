@@ -2,6 +2,8 @@
 // navLabel is optional: editorial collections can be reached from the homepage.
 export const collections = {
   autumn: {
+    metaDescription:
+      'Discover the Soren Studio autumn collection: wool tailoring, soft knitwear and timeless outerwear in warm, grounded tones for cooler days.',
     hash: '#new-autumn',
     group: 'autumn',
     eyebrow: 'New',
@@ -12,6 +14,8 @@ export const collections = {
     navLabel: 'New',
   },
   men: {
+    metaDescription:
+      'Shop Soren Studio menswear, from relaxed tailoring and wide-leg trousers to overshirts, linen shirts and knitwear for every day.',
     hash: '#men',
     group: 'men',
     eyebrow: 'Soren menswear',
@@ -22,6 +26,8 @@ export const collections = {
     navLabel: 'Men',
   },
   women: {
+    metaDescription:
+      'Shop Soren Studio womenswear, with midi dresses, blouses, knitwear and tailored trousers in considered silhouettes for the everyday wardrobe.',
     hash: '#women',
     group: 'women',
     eyebrow: 'Soren womenswear',
@@ -32,6 +38,8 @@ export const collections = {
     navLabel: 'Women',
   },
   accessories: {
+    metaDescription:
+      'Finish your look with Soren Studio accessories, including shoulder bags, belts, sunglasses, scarves, hats and minimal jewellery.',
     hash: '#accessories',
     group: 'accessories',
     eyebrow: 'The finishing touches',
@@ -42,6 +50,8 @@ export const collections = {
     navLabel: 'Accessories',
   },
   offers: {
+    metaDescription:
+      'Explore exclusive offers at Soren Studio: reduced tailoring, tops, outerwear and accessories, all considered pieces at a little less.',
     hash: '#exclusive-offers',
     group: 'offers',
     eyebrow: 'Curated for you',
@@ -51,6 +61,8 @@ export const collections = {
     backLabel: 'exclusive offers',
   },
   icons: {
+    metaDescription:
+      'Discover the Soren Studio iconic pieces, a signature edit of suit sets, sculptural shirts and quiet statement silhouettes made to endure.',
     hash: '#iconic-pieces',
     group: 'icons',
     eyebrow: 'The signature edit',
@@ -60,6 +72,8 @@ export const collections = {
     backLabel: 'iconic pieces',
   },
   basics: {
+    metaDescription:
+      'Build your wardrobe with Soren Studio timeless basics: everyday knitwear, shirts, polos and layers in thoughtful textures.',
     hash: '#timeless-basics',
     group: 'basics',
     eyebrow: 'Pieces to keep',

@@ -50,7 +50,7 @@ export default function CartPage({ onShowHome, onShowProduct, cancelled }) {
                     onClick={() => onShowProduct(line.slug)}
                     aria-label={`View ${product.name}`}
                   >
-                    <img src={product.image} alt={product.name} />
+                    <img src={product.image} alt={product.imageAlt} />
                   </button>
                   <div>
                     <button

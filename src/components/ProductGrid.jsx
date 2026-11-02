@@ -5,7 +5,7 @@ function ProductCard({ item, onShowProduct, label = 'Soren edit' }) {
   return (
     <article className="product-card">
       <button type="button" className="product-image" onClick={() => onShowProduct(item.slug)}>
-        <img src={item.image} alt={item.name} loading="lazy" />
+        <img src={item.image} alt={item.imageAlt} loading="lazy" />
         <span className="product-tag">{label}</span>
       </button>
       <div className="product-info">

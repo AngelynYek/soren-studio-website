@@ -27,7 +27,7 @@ test('search renders initial, matching, empty and paginated states using the rea
 
     const match = render('Soren Minimalist Hobo Bag');
     assert.match(match, /1 piece found/);
-    assert.match(match, /alt="Soren Minimalist Hobo Bag"/);
+    assert.match(match, /alt="Soren Minimalist Hobo Bag\. A softly curved hobo bag/);
     assert.match(match, /class="product-name"/);
     assert.match(match, /RM 64/);
     assert.match(match, /Original price: /);

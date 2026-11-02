@@ -94,7 +94,7 @@ export default function CheckoutPage() {
                 const product = productBySlug(line.slug);
                 return (
                   <li key={lineKey(line)}>
-                    <img src={product.image} alt={product.name} />
+                    <img src={product.image} alt={product.imageAlt} />
                     <div>
                       <span>{product.name}</span>
                       <p>

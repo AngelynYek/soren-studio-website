@@ -3,12 +3,14 @@ import { Search, X } from 'lucide-react';
 import ProductGrid from '../components/ProductGrid';
 import { products } from '../data/products';
 import { collections } from '../data/collections';
+import { navigate } from '../navigation/navigate';
+import { useVisibleCount } from '../navigation/useVisibleCount';
 import {
   MAX_QUERY_LENGTH,
   RESULTS_PER_PAGE,
   cleanSearchQuery,
   createSearchIndex,
-  searchHash,
+  searchPath,
   searchProducts,
 } from './search';
 import './search.css';
@@ -23,7 +25,7 @@ function SearchSuggestions() {
       <ul>
         {suggestedQueries.map((query) => (
           <li key={query}>
-            <a href={searchHash(query)}>{query}</a>
+            <a href={searchPath(query)}>{query}</a>
           </li>
         ))}
       </ul>
@@ -31,10 +33,10 @@ function SearchSuggestions() {
   );
 }
 
-export default function SearchPage({ query = '', onShowProduct }) {
+export default function SearchPage({ query = '' }) {
   const currentQuery = cleanSearchQuery(query);
   const [draft, setDraft] = useState(currentQuery);
-  const [visibleCount, setVisibleCount] = useState(RESULTS_PER_PAGE);
+  const [visibleCount, showMore] = useVisibleCount(RESULTS_PER_PAGE);
   const inputRef = useRef(null);
   const results = useMemo(() => searchProducts(searchIndex, currentQuery), [currentQuery]);
   const visibleResults = results.slice(0, visibleCount);
@@ -47,18 +49,18 @@ export default function SearchPage({ query = '', onShowProduct }) {
     event.preventDefault();
     const nextQuery = cleanSearchQuery(draft);
     setDraft(nextQuery);
-    window.location.hash = searchHash(nextQuery);
+    navigate(searchPath(nextQuery));
   };
 
   const clearSearch = () => {
     setDraft('');
-    window.location.hash = searchHash('');
+    navigate(searchPath(''));
     inputRef.current?.focus({ preventScroll: true });
   };
 
   return (
     <main className="search-page" aria-labelledby="search-title">
-      <a className="product-back" href="#">
+      <a className="product-back" href="/">
         ← Continue shopping
       </a>
       <section className="search-heading">
@@ -109,18 +111,14 @@ export default function SearchPage({ query = '', onShowProduct }) {
           </p>
           {results.length > 0 ? (
             <>
-              <ProductGrid items={visibleResults} onShowProduct={onShowProduct} />
+              <ProductGrid items={visibleResults} />
               {results.length > RESULTS_PER_PAGE && (
                 <div className="search-pagination">
                   <p role="status">
                     Showing {visibleResults.length} of {results.length} pieces
                   </p>
                   {visibleCount < results.length && (
-                    <button
-                      type="button"
-                      className="button button-dark"
-                      onClick={() => setVisibleCount((count) => count + RESULTS_PER_PAGE)}
-                    >
+                    <button type="button" className="button button-dark" onClick={showMore}>
                       Show more pieces
                     </button>
                   )}

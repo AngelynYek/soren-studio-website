@@ -19,11 +19,7 @@ test('cart and checkout screens render empty, review, cancelled and receipt stat
     const { createDemoOrder } = await server.ssrLoadModule('/src/cart/cart.js');
     const { productBySlug } = await server.ssrLoadModule('/src/data/products.js');
     const page = (cancelled = false) =>
-      React.createElement(
-        CartProvider,
-        null,
-        React.createElement(CartPage, { cancelled, onShowHome() {}, onShowProduct() {} }),
-      );
+      React.createElement(CartProvider, null, React.createElement(CartPage, { cancelled }));
     globalThis.localStorage = { getItem: () => null };
     const empty = renderToStaticMarkup(page());
     assert.match(empty, /Your bag is empty/);
@@ -68,7 +64,7 @@ test('cart and checkout screens render empty, review, cancelled and receipt stat
       React.createElement(
         CartProvider,
         null,
-        React.createElement(CheckoutResult, { orderId: 'demo_missing', onShowHome() {} }),
+        React.createElement(CheckoutResult, { orderId: 'demo_missing' }),
       ),
     );
     assert.match(result, /Order details unavailable/);
@@ -82,7 +78,7 @@ test('cart and checkout screens render empty, review, cancelled and receipt stat
       React.createElement(
         CartProvider,
         null,
-        React.createElement(CheckoutResult, { orderId: order.id, onShowHome() {} }),
+        React.createElement(CheckoutResult, { orderId: order.id }),
       ),
     );
     assert.match(receipt, /Thank you for your order/);

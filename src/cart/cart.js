@@ -154,6 +154,8 @@ export function cartReducer(state, action) {
           lineKey(line) === action.key ? { ...line, quantity: action.quantity } : line,
         ),
       };
+    case 'restore':
+      return action.state;
     case 'remove':
       return { ...state, items: state.items.filter((line) => lineKey(line) !== action.key) };
     case 'complete-demo': {

@@ -4,7 +4,7 @@ import { useCart } from './CartProvider';
 import { formatMoney, lineKey } from './cart';
 import './cart.css';
 
-export default function CheckoutResult({ orderId, onShowHome }) {
+export default function CheckoutResult({ orderId }) {
   const { lastOrder, storageWarning } = useCart();
   const order = lastOrder?.id === orderId ? lastOrder : null;
 
@@ -56,12 +56,12 @@ export default function CheckoutResult({ orderId, onShowHome }) {
         Preview checkout. No payment was collected and no items will be shipped.
       </p>
       <div className="checkout-actions">
-        <a className="button button-dark" href="#cart">
+        <a className="button button-dark" href="/cart">
           Back to bag
         </a>
-        <button className="product-back" type="button" onClick={onShowHome}>
+        <a className="product-back" href="/">
           Continue shopping →
-        </button>
+        </a>
       </div>
     </main>
   );

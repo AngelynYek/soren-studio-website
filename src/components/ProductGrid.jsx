@@ -1,18 +1,20 @@
 import React from 'react';
 import ProductPrice from './ProductPrice';
+import { productPath } from '../navigation/productRoutes';
 
-function ProductCard({ item, onShowProduct, label = 'Soren edit' }) {
+function ProductCard({ item, shopFilter, label = 'Soren edit' }) {
+  const href = productPath(item.slug, shopFilter);
   return (
     <article className="product-card">
-      <button type="button" className="product-image" onClick={() => onShowProduct(item.slug)}>
-        <img src={item.image} alt={item.name} loading="lazy" />
+      <a className="product-image" href={href}>
+        <img src={item.image} alt={item.imageAlt} loading="lazy" />
         <span className="product-tag">{label}</span>
-      </button>
+      </a>
       <div className="product-info">
         <div>
-          <button type="button" className="product-name" onClick={() => onShowProduct(item.slug)}>
+          <a className="product-name" href={href}>
             {item.name}
-          </button>
+          </a>
           <p>
             <ProductPrice price={item.price} wasPrice={item.wasPrice} />
           </p>
@@ -22,11 +24,11 @@ function ProductCard({ item, onShowProduct, label = 'Soren edit' }) {
   );
 }
 
-export default function ProductGrid({ items, onShowProduct, label, compact = false }) {
+export default function ProductGrid({ items, shopFilter, label, compact = false }) {
   return (
     <div className={`product-grid ${compact ? 'three-up' : ''}`}>
       {items.map((item) => (
-        <ProductCard key={item.slug} item={item} onShowProduct={onShowProduct} label={label} />
+        <ProductCard key={item.slug} item={item} shopFilter={shopFilter} label={label} />
       ))}
     </div>
   );

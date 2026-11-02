@@ -6,7 +6,7 @@ import {
   filterShopProducts,
   getShopCounts,
   normalizeShopFilter,
-  shopHash,
+  shopPath,
 } from '../src/shop/shop.js';
 
 const catalog = [
@@ -56,12 +56,12 @@ test('accessory categories take priority over sizing and collection membership',
 test('filter URLs round-trip valid selections and unknown filters safely show the full catalog', () => {
   for (const { value } of SHOP_FILTERS) {
     assert.equal(normalizeShopFilter(value), value);
-    const params = new URLSearchParams(shopHash(value).split('?')[1]);
+    const params = new URLSearchParams(shopPath(value).split('?')[1]);
     assert.equal(normalizeShopFilter(params.get('department')), value);
   }
   for (const value of [null, undefined, '', 'invalid', '<script>']) {
     assert.equal(normalizeShopFilter(value), 'all');
-    assert.equal(shopHash(value), '#shop-all');
+    assert.equal(shopPath(value), '/shop-all');
     assert.equal(filterShopProducts(catalog, value), catalog);
   }
 });

@@ -35,6 +35,8 @@ const createProduct = (product) => ({
   material: null,
   fit: 'Designed for an easy, considered fit',
   ...product,
+  // Descriptions open by describing the piece, so the first sentence also describes its photo.
+  imageAlt: `${product.name}. ${product.description.split(/(?<=\.)\s/)[0]}`,
 });
 
 const existingProducts = [

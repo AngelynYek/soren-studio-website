@@ -21,7 +21,7 @@ test('account screens render accessible sign-in, creation and signed-in states w
     globalThis.localStorage = { getItem: () => null };
     const signIn = render();
     assert.match(signIn, /Welcome back/);
-    assert.match(signIn, /href="#account\/create"/);
+    assert.match(signIn, /href="\/account\/create"/);
     assert.match(signIn, /<label for="account-email">Email address/);
     assert.match(signIn, /type="email"[^>]*required/);
     assert.match(signIn, /Browser-only preview/);
@@ -29,7 +29,7 @@ test('account screens render accessible sign-in, creation and signed-in states w
     const create = render('create');
     assert.match(create, /A considered beginning/);
     assert.match(create, /<label for="account-name">Name/);
-    assert.match(create, /href="#account"/);
+    assert.match(create, /href="\/account"/);
     globalThis.localStorage = {
       getItem: () =>
         JSON.stringify({
@@ -41,7 +41,7 @@ test('account screens render accessible sign-in, creation and signed-in states w
     assert.match(signedIn, /Welcome, &lt;Alex&gt;/);
     assert.match(signedIn, /alex@example.com/);
     assert.match(signedIn, /Sign out/);
-    assert.match(signedIn, /href="#cart"/);
+    assert.match(signedIn, /href="\/cart"/);
     assert.match(signedIn, /shopping bag is shared/);
     assert.doesNotMatch(signedIn, /<form|type="password"/);
     globalThis.localStorage = {

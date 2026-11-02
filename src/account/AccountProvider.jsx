@@ -31,6 +31,15 @@ export function AccountProvider({ children }) {
     }
   }, [state]);
 
+  // Another tab saved a change; adopt it so this tab's next save does not overwrite it.
+  useEffect(() => {
+    const syncFromOtherTab = (event) => {
+      if (event.key === ACCOUNT_STORAGE_KEY) setState(restoreAccount(event.newValue));
+    };
+    window.addEventListener('storage', syncFromOtherTab);
+    return () => window.removeEventListener('storage', syncFromOtherTab);
+  }, []);
+
   const updateProfile = (transition, input) => {
     try {
       setState(transition(state, input));

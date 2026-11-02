@@ -1,3 +1,5 @@
+import { defaultClothingProfile } from './productDepartments.js';
+
 // Illustrative BODY measurements in centimetres, not measured garment dimensions.
 // Store one source unit; display conversions never mutate these shared charts.
 const bodyCharts = {
@@ -56,7 +58,7 @@ export function getSizeGuide(product) {
   const measurementKeys = categoryMeasurements[product.category];
   if (!measurementKeys || !product.sizes?.length) return null;
 
-  const profile = product.sizeProfile ?? (product.group === 'men' ? 'men' : 'women');
+  const profile = product.sizeProfile ?? defaultClothingProfile(product);
   const chart = bodyCharts[profile];
   if (!chart || product.sizes.some((size) => !chart[size])) return null;
 

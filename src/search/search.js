@@ -1,4 +1,4 @@
-import { ACCESSORY_CATEGORIES } from '../data/productDepartments.js';
+import { ACCESSORY_CATEGORIES, getProductDepartment } from '../data/productDepartments.js';
 
 export const MAX_QUERY_LENGTH = 120;
 export const RESULTS_PER_PAGE = 12;
@@ -64,10 +64,12 @@ export function createSearchIndex(products, collections) {
       product.material,
       product.fit,
       product.group,
+      getProductDepartment(product),
       collection?.title,
       collection?.label,
       collection?.backLabel,
       product.wasPrice ? 'sale' : '',
+      product.category === 'Knitwear' ? 'sweater jumper' : '',
     ];
     return {
       product,
@@ -77,8 +79,11 @@ export function createSearchIndex(products, collections) {
   });
 }
 
+// Prefix matching alone fails when the query is longer: "necklaces" must find "necklace".
+// The singular must be a whole word, or "press" would find "presence".
 function matchesWord(words, token) {
-  return words.some((word) => word.startsWith(token));
+  const singular = token.length > 3 ? token.replace(/s$/, '') : token;
+  return words.some((word) => word.startsWith(token) || word === singular);
 }
 
 export function searchProducts(index, query) {
@@ -107,7 +112,7 @@ export function searchProducts(index, query) {
     .map((entry) => entry.product);
 }
 
-export function searchHash(query) {
+export function searchPath(query) {
   const cleaned = cleanSearchQuery(query);
-  return cleaned ? `#search?q=${encodeURIComponent(cleaned)}` : '#search';
+  return cleaned ? `/search?q=${encodeURIComponent(cleaned)}` : '/search';
 }

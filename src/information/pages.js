@@ -2,7 +2,9 @@ export const CONTACT_EMAIL = 'hello@soren.studio';
 
 export const informationPages = {
   story: {
-    hash: '#our-story',
+    metaDescription:
+      'Discover the story behind Soren Studio, a quieter approach to the everyday wardrobe built on timeless silhouettes, soft textures and a restrained palette.',
+    path: '/our-story',
     title: 'Our story',
     eyebrow: 'Soren Studio · Made with intention',
     introduction: 'A quieter approach to the everyday wardrobe.',
@@ -21,10 +23,12 @@ export const informationPages = {
         ],
       },
     ],
-    link: { label: 'Explore the complete edit', href: '#shop-all' },
+    link: { label: 'Explore the complete edit', href: '/shop-all' },
   },
   shipping: {
-    hash: '#shipping',
+    metaDescription:
+      'Read how ordering, delivery, shipping costs and returns work at Soren Studio, including what to expect from the preview checkout.',
+    path: '/shipping',
     title: 'Shipping & returns',
     eyebrow: 'Soren Studio · Client care',
     introduction: 'A few details before you order.',
@@ -54,10 +58,12 @@ export const informationPages = {
         ],
       },
     ],
-    link: { label: 'Read the FAQs', href: '#faq' },
+    link: { label: 'Read the FAQs', href: '/faq' },
   },
   faq: {
-    hash: '#faq',
+    metaDescription:
+      'Find answers about sizing, your shopping bag, checkout, accounts, currency and order confirmations at Soren Studio.',
+    path: '/faq',
     title: 'FAQs',
     eyebrow: 'Soren Studio · A little guidance',
     introduction: 'Answers to the everyday questions.',
@@ -93,10 +99,12 @@ export const informationPages = {
           'A confirmation appears after checkout. The latest preview order is saved in this browser when local storage is available. No confirmation email is sent, and clearing browser data removes the saved order.',
       },
     ],
-    link: { label: 'Contact us', href: '#contact' },
+    link: { label: 'Contact us', href: '/contact' },
   },
   contact: {
-    hash: '#contact',
+    metaDescription:
+      'Get in touch with Soren Studio by email with questions about the collections, sizing or your experience.',
+    path: '/contact',
     title: 'Contact us',
     eyebrow: 'Soren Studio · In conversation',
     introduction: 'For questions about the edit or your experience at Soren.',
@@ -115,10 +123,10 @@ export const informationPages = {
         ],
       },
     ],
-    link: { label: 'Browse the FAQs', href: '#faq' },
+    link: { label: 'Browse the FAQs', href: '/faq' },
   },
 };
 
-export function informationPageKey(hash) {
-  return Object.keys(informationPages).find((key) => informationPages[key].hash === hash) ?? null;
+export function informationPageKey(path) {
+  return Object.keys(informationPages).find((key) => informationPages[key].path === path) ?? null;
 }

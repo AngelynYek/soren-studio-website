@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { navigate } from '../navigation/navigate';
 import { ArrowRight, CreditCard } from 'lucide-react';
 import { productBySlug } from '../data/products';
 import { useCart } from './CartProvider';
@@ -18,7 +19,7 @@ export default function CheckoutPage() {
 
   const cancel = () => {
     pending.current?.abort();
-    window.location.hash = 'cart?cancelled=1';
+    navigate('/cart?cancelled=1');
   };
   const checkout = async (event) => {
     event.preventDefault();
@@ -32,7 +33,7 @@ export default function CheckoutPage() {
       const order = createDemoOrder(items, productBySlug);
       await simulatePayment({ signal: controller.signal });
       dispatch({ type: 'complete-demo', order });
-      window.location.hash = `checkout/success?order=${encodeURIComponent(order.id)}`;
+      navigate(`/checkout/success?order=${encodeURIComponent(order.id)}`);
     } catch {
       if (!controller.signal.aborted)
         setError('Your order could not be completed. Please review your bag and try again.');
@@ -47,7 +48,7 @@ export default function CheckoutPage() {
       <p className="eyebrow">Your considered edit</p>
       <h1>Checkout</h1>
       <nav className="checkout-progress" aria-label="Checkout progress">
-        <a href="#cart">Bag</a>
+        <a href="/cart">Bag</a>
         <span aria-hidden="true">/</span>
         <span aria-current="step">Checkout</span>
         <span aria-hidden="true">/</span>
@@ -62,7 +63,7 @@ export default function CheckoutPage() {
         <section className="cart-empty">
           <h2>Your bag is empty.</h2>
           <p>Add a piece before checking out.</p>
-          <a className="button button-dark" href="#cart">
+          <a className="button button-dark" href="/cart">
             Back to bag
           </a>
         </section>
@@ -94,7 +95,7 @@ export default function CheckoutPage() {
                 const product = productBySlug(line.slug);
                 return (
                   <li key={lineKey(line)}>
-                    <img src={product.image} alt={product.name} />
+                    <img src={product.image} alt={product.imageAlt} />
                     <div>
                       <span>{product.name}</span>
                       <p>

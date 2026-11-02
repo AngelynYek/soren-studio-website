@@ -21,11 +21,11 @@ test('timeless basics includes every supplied photo and a matching clothing size
 
     assert.ok(photos.length > 0);
     assert.equal(basics.length, photos.length);
-    assert.equal(collections.basics.hash, '#timeless-basics');
+    assert.equal(collections.basics.path, '/timeless-basics');
     assert.equal(collections.basics.group, 'basics');
     assert.equal(collections.basics.backLabel, 'timeless basics');
     assert.equal(
-      new Set(Object.values(collections).map((collection) => collection.hash)).size,
+      new Set(Object.values(collections).map((collection) => collection.path)).size,
       Object.keys(collections).length,
     );
     assert.equal(new Set(products.map((product) => product.slug)).size, products.length);

@@ -1,12 +1,13 @@
 import React from 'react';
 import { ArrowRight, Minus, Plus } from 'lucide-react';
 import { productBySlug } from '../data/products';
+import { productPath } from '../navigation/productRoutes';
 import { useCart } from './CartProvider';
 import { MAX_QUANTITY, cartTotal, formatMoney, lineKey, priceInMinorUnits } from './cart';
 import OrderSummary from './OrderSummary';
 import './cart.css';
 
-export default function CartPage({ onShowHome, onShowProduct, cancelled }) {
+export default function CartPage({ cancelled }) {
   const { items, count, dispatch, storageWarning } = useCart();
   const total = cartTotal(items, productBySlug);
 
@@ -32,9 +33,9 @@ export default function CartPage({ onShowHome, onShowProduct, cancelled }) {
           <p>
             Your bag is empty. Open a product, choose a size if needed, then select “Add to bag”.
           </p>
-          <button className="button button-dark" type="button" onClick={onShowHome}>
+          <a className="button button-dark" href="/">
             Explore the collections <ArrowRight size={14} />
-          </button>
+          </a>
         </section>
       ) : (
         <div className="cart-layout">
@@ -44,22 +45,17 @@ export default function CartPage({ onShowHome, onShowProduct, cancelled }) {
               const key = lineKey(line);
               return (
                 <article key={key} className="cart-item">
-                  <button
-                    type="button"
+                  <a
                     className="cart-image"
-                    onClick={() => onShowProduct(line.slug)}
+                    href={productPath(line.slug)}
                     aria-label={`View ${product.name}`}
                   >
-                    <img src={product.image} alt={product.name} />
-                  </button>
+                    <img src={product.image} alt={product.imageAlt} />
+                  </a>
                   <div>
-                    <button
-                      type="button"
-                      className="product-name"
-                      onClick={() => onShowProduct(line.slug)}
-                    >
+                    <a className="product-name" href={productPath(line.slug)}>
                       {product.name}
-                    </button>
+                    </a>
                     <p className="cart-size">
                       {line.size ? `Size ${line.size}` : 'One size'} ·{' '}
                       {formatMoney(priceInMinorUnits(product.price))} each
@@ -106,12 +102,12 @@ export default function CartPage({ onShowHome, onShowProduct, cancelled }) {
                 </article>
               );
             })}
-            <button type="button" className="product-back" onClick={onShowHome}>
+            <a className="product-back" href="/">
               ← Continue shopping
-            </button>
+            </a>
           </section>
           <OrderSummary total={total}>
-            <a className="button button-dark cart-checkout" href="#checkout">
+            <a className="button button-dark cart-checkout" href="/checkout">
               Proceed to checkout <ArrowRight size={14} />
             </a>
             <p className="checkout-preview-note">

@@ -5,7 +5,7 @@ export function emptyAccountState() {
   return { profiles: [], currentEmail: null };
 }
 
-export function normalizeEmail(email) {
+function normalizeEmail(email) {
   return typeof email === 'string' ? email.trim().toLowerCase() : '';
 }
 

@@ -20,7 +20,7 @@ test('iconic collection preserves homepage products and includes each new photo 
     const featured = featuredProductsByGroup('icons');
     const photoNames = readdirSync(new URL('../src/images/iconic/', import.meta.url));
 
-    assert.equal(collections.icons.hash, '#iconic-pieces');
+    assert.equal(collections.icons.path, '/iconic-pieces');
     assert.equal(collections.icons.group, 'icons');
     assert.equal(collections.icons.backLabel, 'iconic pieces');
     assert.deepEqual(

@@ -1,7 +1,7 @@
-import { normalizeShopFilter, shopHash } from '../shop/shop.js';
+import { normalizeShopFilter, shopPath } from '../shop/shop.js';
 
-export function productHash(slug, shopFilter) {
-  const path = `#product/${encodeURIComponent(slug)}`;
+export function productPath(slug, shopFilter) {
+  const path = `/product/${encodeURIComponent(slug)}`;
   if (shopFilter === undefined) return path;
 
   const params = new URLSearchParams({
@@ -12,7 +12,7 @@ export function productHash(slug, shopFilter) {
 }
 
 export function parseProductRoute(path, params = new URLSearchParams()) {
-  const match = path.match(/^#product\/(.+)$/);
+  const match = path.match(/^\/product\/(.+)$/);
   if (!match) return null;
 
   try {
@@ -22,7 +22,7 @@ export function parseProductRoute(path, params = new URLSearchParams()) {
       // Only accept a known internal origin, never an arbitrary return URL.
       returnTo:
         params.get('from') === 'shop-all'
-          ? { label: 'shop all', hash: shopHash(params.get('department')) }
+          ? { label: 'shop all', path: shopPath(params.get('department')) }
           : null,
     };
   } catch {

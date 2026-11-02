@@ -25,12 +25,23 @@ export function CartProvider({ children }) {
   useEffect(() => {
     try {
       localStorage.setItem(CART_STORAGE_KEY, JSON.stringify(state));
+      setStorageWarning('');
     } catch {
       setStorageWarning(
         'Your browser could not save the bag or order summary. They will stay available in this tab until you refresh or close it.',
       );
     }
   }, [state]);
+
+  // Another tab saved a change; adopt it so this tab's next save does not overwrite it.
+  useEffect(() => {
+    const syncFromOtherTab = (event) => {
+      if (event.key !== CART_STORAGE_KEY) return;
+      dispatch({ type: 'restore', state: restoreCart(event.newValue, productBySlug) });
+    };
+    window.addEventListener('storage', syncFromOtherTab);
+    return () => window.removeEventListener('storage', syncFromOtherTab);
+  }, []);
 
   const add = (product, size) => {
     const line = { slug: product.slug, size, quantity: 1 };

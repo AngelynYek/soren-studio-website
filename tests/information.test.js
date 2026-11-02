@@ -5,14 +5,14 @@ import { CONTACT_EMAIL, informationPages, informationPageKey } from '../src/info
 test('each information page has a unique route and complete content', () => {
   const pages = Object.values(informationPages);
   assert.equal(pages.length, 4);
-  assert.equal(new Set(pages.map((page) => page.hash)).size, pages.length);
+  assert.equal(new Set(pages.map((page) => page.path)).size, pages.length);
 
   for (const [key, page] of Object.entries(informationPages)) {
-    assert.equal(informationPageKey(page.hash), key);
+    assert.equal(informationPageKey(page.path), key);
     assert.ok(page.title && page.eyebrow && page.introduction);
     assert.ok(page.sections?.length || page.questions?.length);
     assert.ok(page.link.label);
-    assert.ok(page.link.href === '#shop-all' || informationPageKey(page.link.href));
+    assert.ok(page.link.href === '/shop-all' || informationPageKey(page.link.href));
     for (const section of page.sections ?? []) {
       assert.ok(section.title && section.paragraphs.length);
       assert.ok(
@@ -25,16 +25,16 @@ test('each information page has a unique route and complete content', () => {
   }
 });
 
-test('information routes match only the supported page hashes', () => {
-  for (const hash of [
+test('information routes match only the supported page paths', () => {
+  for (const path of [
     '',
     '#',
-    '#essentials',
-    '#our-story/unknown',
-    '#contact-us',
-    '#product/coat',
+    '/essentials',
+    '/our-story/unknown',
+    '/contact-us',
+    '/product/coat',
   ]) {
-    assert.equal(informationPageKey(hash), null);
+    assert.equal(informationPageKey(path), null);
   }
 });
 

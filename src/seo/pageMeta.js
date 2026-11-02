@@ -92,7 +92,6 @@ export function getPageMeta(route, product = null) {
     case 'checkout':
     case 'receipt':
       return unindexed(utilityMeta[route.page]);
-    default:
   }
   if (product)
     return indexed(
@@ -105,7 +104,10 @@ export function getPageMeta(route, product = null) {
       { title: collection.title, description: collection.metaDescription },
       collection.path,
     );
-  // Unknown addresses still show the homepage, so they must not be indexed as pages.
-  if (route.page === 'product' || route.unknown) return { ...homeMeta, noindex: true };
+  if (route.page === 'product' || route.unknown)
+    return unindexed({
+      title: 'Page not found',
+      description: 'This Soren Studio page may have moved, or the link may be out of date.',
+    });
   return { ...homeMeta, canonical: `${SITE_URL}/` };
 }

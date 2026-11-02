@@ -78,22 +78,16 @@
   color: var(--muted);
 }
 
-.shop-pagination,
-.shop-empty {
+.shop-pagination {
   text-align: center;
   margin-top: 40px;
 }
 
-.shop-pagination p,
-.shop-empty p {
+.shop-pagination p {
   color: var(--muted);
   font-size: 12px;
   line-height: 1.7;
   margin-bottom: 20px;
-}
-
-.shop-empty h2 {
-  font: 400 26px var(--serif);
 }
 
 @media (max-width: 480px) {

@@ -6,7 +6,7 @@ import { collections } from '../src/data/collections.js';
 import { informationPages } from '../src/information/pages.js';
 import { SHOP_FILTERS } from '../src/shop/shop.js';
 import { SITE_URL, getPageMeta, homeMeta } from '../src/seo/pageMeta.js';
-import { sitemapPaths, sitemapXml } from '../src/seo/sitemap.js';
+import { robotsTxt, sitemapPaths, sitemapXml } from '../src/seo/sitemap.js';
 import { legacyHashUrl, parseRoute } from '../src/navigation/routes.js';
 
 async function loadProducts() {
@@ -46,13 +46,17 @@ test('every page has a unique title and meta description', async () => {
   assert.equal(new Set(pages.map(({ description }) => description)).size, pages.length);
 });
 
-test('search titles name the query and missing products fall back to the homepage', () => {
+test('search titles name the query and missing pages are not indexed', () => {
   assert.equal(
     getPageMeta({ page: 'search', query: 'coat' }).title,
     'Search results for “coat” — Soren Studio',
   );
-  assert.deepEqual(getPageMeta({ page: 'product' }, null), { ...homeMeta, noindex: true });
-  assert.deepEqual(getPageMeta({ page: 'home', unknown: true }), { ...homeMeta, noindex: true });
+  for (const route of [{ page: 'product' }, { page: 'home', unknown: true }]) {
+    const meta = getPageMeta(route);
+    assert.equal(meta.title, 'Page not found — Soren Studio');
+    assert.equal(meta.noindex, true);
+    assert.equal(meta.canonical, undefined);
+  }
 });
 
 test('the static homepage metadata matches the rendered homepage', () => {
@@ -100,6 +104,7 @@ test('the sitemap lists every indexable page and each one has a matching canonic
     assert.equal(getPageMeta(parseRoute(path), product).canonical, `${SITE_URL}${path}`);
   }
   assert.equal(sitemapXml(paths).match(/<loc>/g).length, paths.length);
+  assert.ok(robotsTxt.includes(`Sitemap: ${SITE_URL}/sitemap.xml`));
 });
 
 test('old # links map to the matching real URL', () => {
@@ -111,7 +116,7 @@ test('old # links map to the matching real URL', () => {
     upgrade('#product/noir-fold-dress?from=shop-all&department=men'),
     '/product/noir-fold-dress?from=shop-all&department=men',
   );
-  assert.equal(upgrade('#instagram'), null);
+  assert.equal(upgrade('#unknown'), null);
   assert.equal(upgrade(''), null);
   assert.equal(legacyHashUrl({ pathname: '/men', hash: '#cart' }), null);
 });

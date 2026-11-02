@@ -13,6 +13,12 @@ export function sitemapPaths(products) {
   ];
 }
 
+export const robotsTxt = `User-agent: *
+Allow: /
+
+Sitemap: ${SITE_URL}/sitemap.xml
+`;
+
 export function sitemapXml(paths) {
   const urls = paths.map((path) => `  <url>\n    <loc>${SITE_URL}${path}</loc>\n  </url>`);
   return `<?xml version="1.0" encoding="UTF-8"?>

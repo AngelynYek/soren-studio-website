@@ -3,5 +3,3 @@ dist/
 src/images/
 package-lock.json
 .env*
-.codex/
-.agents/

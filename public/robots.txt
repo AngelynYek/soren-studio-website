@@ -1,4 +1,0 @@
-User-agent: *
-Allow: /
-
-Sitemap: https://soren-studio-website.vercel.app/sitemap.xml

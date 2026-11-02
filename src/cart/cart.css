@@ -27,10 +27,7 @@
   border-top: 1px solid var(--line);
 }
 .cart-image {
-  border: 0;
-  padding: 0;
   background: #f0eeea;
-  cursor: pointer;
   align-self: start;
 }
 .cart-image img {

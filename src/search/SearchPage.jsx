@@ -4,6 +4,7 @@ import ProductGrid from '../components/ProductGrid';
 import { products } from '../data/products';
 import { collections } from '../data/collections';
 import { navigate } from '../navigation/navigate';
+import { useVisibleCount } from '../navigation/useVisibleCount';
 import {
   MAX_QUERY_LENGTH,
   RESULTS_PER_PAGE,
@@ -32,10 +33,10 @@ function SearchSuggestions() {
   );
 }
 
-export default function SearchPage({ query = '', onShowProduct }) {
+export default function SearchPage({ query = '' }) {
   const currentQuery = cleanSearchQuery(query);
   const [draft, setDraft] = useState(currentQuery);
-  const [visibleCount, setVisibleCount] = useState(RESULTS_PER_PAGE);
+  const [visibleCount, showMore] = useVisibleCount(RESULTS_PER_PAGE);
   const inputRef = useRef(null);
   const results = useMemo(() => searchProducts(searchIndex, currentQuery), [currentQuery]);
   const visibleResults = results.slice(0, visibleCount);
@@ -110,18 +111,14 @@ export default function SearchPage({ query = '', onShowProduct }) {
           </p>
           {results.length > 0 ? (
             <>
-              <ProductGrid items={visibleResults} onShowProduct={onShowProduct} />
+              <ProductGrid items={visibleResults} />
               {results.length > RESULTS_PER_PAGE && (
                 <div className="search-pagination">
                   <p role="status">
                     Showing {visibleResults.length} of {results.length} pieces
                   </p>
                   {visibleCount < results.length && (
-                    <button
-                      type="button"
-                      className="button button-dark"
-                      onClick={() => setVisibleCount((count) => count + RESULTS_PER_PAGE)}
-                    >
+                    <button type="button" className="button button-dark" onClick={showMore}>
                       Show more pieces
                     </button>
                   )}

@@ -1,4 +1,4 @@
-import React, { useEffect, useMemo, useRef, useState } from 'react';
+import React, { useEffect, useMemo, useRef } from 'react';
 import ProductGrid from '../components/ProductGrid';
 import { products } from '../data/products';
 import {
@@ -11,39 +11,24 @@ import {
 } from './shop';
 import './shop.css';
 import { navigate } from '../navigation/navigate';
+import { useVisibleCount } from '../navigation/useVisibleCount';
 
 const counts = getShopCounts(products);
 
-function ShopResults({ items, onShowProduct }) {
-  const [visibleCount, setVisibleCount] = useState(SHOP_PAGE_SIZE);
+function ShopResults({ items, shopFilter }) {
+  const [visibleCount, showMore] = useVisibleCount(SHOP_PAGE_SIZE);
   const visibleItems = items.slice(0, visibleCount);
-
-  if (items.length === 0) {
-    return (
-      <div className="shop-empty">
-        <h2>No pieces in this edit yet.</h2>
-        <p>Explore the full collection to find your next everyday piece.</p>
-        <a className="button button-dark" href={shopPath()}>
-          View all pieces
-        </a>
-      </div>
-    );
-  }
 
   return (
     <>
-      <ProductGrid items={visibleItems} onShowProduct={onShowProduct} />
+      <ProductGrid items={visibleItems} shopFilter={shopFilter} />
       {items.length > SHOP_PAGE_SIZE && (
         <div className="shop-pagination">
           <p role="status">
             Showing {visibleItems.length} of {items.length} pieces
           </p>
           {visibleCount < items.length && (
-            <button
-              type="button"
-              className="button button-dark"
-              onClick={() => setVisibleCount((count) => count + SHOP_PAGE_SIZE)}
-            >
+            <button type="button" className="button button-dark" onClick={showMore}>
               Show more pieces
             </button>
           )}
@@ -53,12 +38,11 @@ function ShopResults({ items, onShowProduct }) {
   );
 }
 
-export default function ShopAllPage({ filter = 'all', onShowProduct }) {
+export default function ShopAllPage({ filter = 'all' }) {
   const headingRef = useRef(null);
   const activeFilter = normalizeShopFilter(filter);
   const items = useMemo(() => filterShopProducts(products, activeFilter), [activeFilter]);
   const label = SHOP_FILTERS.find((option) => option.value === activeFilter).label;
-  const openProduct = (slug) => onShowProduct(slug, activeFilter);
 
   useEffect(() => {
     headingRef.current?.focus({ preventScroll: true });
@@ -103,7 +87,7 @@ export default function ShopAllPage({ filter = 'all', onShowProduct }) {
           </p>
         </div>
         {/* Reset pagination, but keep filter controls mounted for keyboard focus. */}
-        <ShopResults key={activeFilter} items={items} onShowProduct={openProduct} />
+        <ShopResults key={activeFilter} items={items} shopFilter={activeFilter} />
       </section>
     </main>
   );

@@ -14,9 +14,6 @@
 * {
   box-sizing: border-box;
 }
-html {
-  scroll-behavior: smooth;
-}
 body {
   margin: 0;
   min-width: 320px;
@@ -55,7 +52,7 @@ input {
   align-items: center;
   gap: clamp(15px, 2vw, 30px);
 }
-.header-actions button {
+.header-actions a {
   font-size: 9px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
@@ -209,10 +206,8 @@ input {
 }
 .product-image {
   width: 100%;
-  padding: 0;
-  border: 0;
+  color: #000;
   text-align: left;
-  cursor: pointer;
   display: block;
   position: relative;
   background: #f0eeea;
@@ -349,15 +344,6 @@ input {
   font-size: 9px;
   color: var(--muted);
   line-height: 1.7;
-}
-.socials {
-  display: flex;
-  gap: 12px;
-  margin-top: 14px;
-}
-.socials a {
-  display: grid;
-  place-items: center;
 }
 .footer-column h2 {
   font-size: 8px;
@@ -583,15 +569,9 @@ button.button {
   display: flex;
   align-items: center;
   gap: 7px;
-  padding: 0;
-  border: 0;
-  background: transparent;
-  color: inherit;
-  font: inherit;
   font-size: 8px;
   text-transform: uppercase;
   letter-spacing: 0.12em;
-  cursor: pointer;
 }
 .section-heading-link:hover {
   opacity: 0.6;
@@ -611,14 +591,9 @@ button.button {
 /* Collection catalogue and product details */
 .navigation-button,
 .wordmark-button {
-  border: 0;
-  background: transparent;
-  color: inherit;
-  cursor: pointer;
+  display: inline-block;
 }
 .navigation-button {
-  padding: 0;
-  font: inherit;
   transition: opacity 0.2s;
 }
 .navigation-button:hover {
@@ -635,18 +610,6 @@ button.button {
   font-size: 9px;
   letter-spacing: 0.09em;
   text-transform: uppercase;
-}
-.footer-link {
-  display: block;
-  padding: 0;
-  font: inherit;
-  font-size: 9px;
-  color: var(--muted);
-  margin: 0 0 10px;
-  text-align: left;
-}
-.wordmark-button {
-  padding: 0;
 }
 .collection-page {
   background: var(--paper);
@@ -714,6 +677,9 @@ button.button {
   text-transform: uppercase;
   cursor: pointer;
   transition: color 0.2s;
+}
+.product-page .product-back {
+  display: inline-block;
 }
 .product-back:hover {
   color: var(--ink);
@@ -877,15 +843,12 @@ button.button {
   font-size: 11px;
 }
 .product-name {
-  padding: 0;
-  border: 0;
-  background: transparent;
+  display: inline-block;
   color: var(--ink);
   font:
     400 10px/1.35 'DM Sans',
     sans-serif;
   text-align: left;
-  cursor: pointer;
   transition: opacity 0.2s;
 }
 .product-name:hover {

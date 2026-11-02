@@ -53,8 +53,7 @@ test('shop all covers the complete catalog exactly once and renders each departm
       }
     }
 
-    const render = (filter) =>
-      renderToStaticMarkup(React.createElement(ShopAllPage, { filter, onShowProduct() {} }));
+    const render = (filter) => renderToStaticMarkup(React.createElement(ShopAllPage, { filter }));
     for (const { value, label } of SHOP_FILTERS) {
       const markup = render(value);
       const items = filterShopProducts(products, value);
@@ -66,6 +65,10 @@ test('shop all covers the complete catalog exactly once and renders each departm
         new RegExp(`<input(?=[^>]*type="radio")(?=[^>]*checked)(?=[^>]*value="${value}")[^>]*>`),
       );
       assert.match(markup, new RegExp(`${items.length} pieces · ${label}`));
+      assert.match(
+        markup,
+        new RegExp(`href="/product/[^"]+\\?from=shop-all&amp;department=${value}"`),
+      );
       assert.equal(
         (markup.match(/class="product-card"/g) ?? []).length,
         Math.min(items.length, SHOP_PAGE_SIZE),
@@ -79,6 +82,25 @@ test('shop all covers the complete catalog exactly once and renders each departm
     }
     assert.match(render('invalid'), new RegExp(`${products.length} pieces · All pieces`));
   } finally {
+    await server.close();
+  }
+});
+
+test('shop all restores the number of pieces saved on the history entry', async () => {
+  const server = await createServer({
+    configFile: false,
+    server: { middlewareMode: true, hmr: false, ws: false },
+    appType: 'custom',
+  });
+  try {
+    const { default: ShopAllPage } = await server.ssrLoadModule('/src/shop/ShopAllPage.jsx');
+    const cards = () =>
+      renderToStaticMarkup(React.createElement(ShopAllPage)).match(/class="product-card"/g).length;
+    assert.equal(cards(), SHOP_PAGE_SIZE);
+    globalThis.history = { state: { visibleCount: SHOP_PAGE_SIZE * 2 } };
+    assert.equal(cards(), SHOP_PAGE_SIZE * 2);
+  } finally {
+    delete globalThis.history;
     await server.close();
   }
 });

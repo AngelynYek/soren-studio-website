@@ -1,6 +1,6 @@
 import { writeFileSync } from 'node:fs';
 import { createServer } from 'vite';
-import { sitemapPaths, sitemapXml } from '../src/seo/sitemap.js';
+import { robotsTxt, sitemapPaths, sitemapXml } from '../src/seo/sitemap.js';
 
 const server = await createServer({
   configFile: false,
@@ -10,6 +10,7 @@ const server = await createServer({
 try {
   const { products } = await server.ssrLoadModule('/src/data/products.js');
   writeFileSync('dist/sitemap.xml', sitemapXml(sitemapPaths(products)));
+  writeFileSync('dist/robots.txt', robotsTxt);
 } finally {
   await server.close();
 }

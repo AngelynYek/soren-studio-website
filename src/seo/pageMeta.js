@@ -1,5 +1,8 @@
 import { collections } from '../data/collections.js';
 import { informationPages } from '../information/pages.js';
+import { productPath } from '../navigation/productRoutes.js';
+
+export const SITE_URL = 'https://soren-studio-website.vercel.app';
 
 // index.html repeats this record so the homepage is complete before JavaScript runs.
 export const homeMeta = {
@@ -66,31 +69,43 @@ const withSiteName = ({ title, description }) => ({
   title: `${title} — Soren Studio`,
   description,
 });
+const indexed = (meta, path) => ({ ...withSiteName(meta), canonical: `${SITE_URL}${path}` });
+const unindexed = (meta) => ({ ...withSiteName(meta), noindex: true });
 
 export function getPageMeta(route, product = null) {
   switch (route.page) {
     case 'information': {
-      const { title, metaDescription } = informationPages[route.pageKey];
-      return withSiteName({ title, description: metaDescription });
+      const { title, metaDescription, path } = informationPages[route.pageKey];
+      return indexed({ title, description: metaDescription }, path);
     }
     case 'shop':
-      return withSiteName(shopMeta[route.filter]);
+      // Filtered views share the complete list's canonical address.
+      return indexed(shopMeta[route.filter], '/shop-all');
     case 'search':
-      return withSiteName({
+      return unindexed({
         title: route.query ? `Search results for “${route.query}”` : 'Search',
         description: searchDescription,
       });
     case 'account':
-      return withSiteName(accountMeta[route.mode]);
+      return unindexed(accountMeta[route.mode]);
     case 'cart':
     case 'checkout':
     case 'receipt':
-      return withSiteName(utilityMeta[route.page]);
+      return unindexed(utilityMeta[route.page]);
     default:
   }
-  if (product) return withSiteName({ title: product.name, description: product.description });
+  if (product)
+    return indexed(
+      { title: product.name, description: product.description },
+      productPath(product.slug),
+    );
   const collection = collections[route.page];
   if (collection)
-    return withSiteName({ title: collection.title, description: collection.metaDescription });
-  return homeMeta;
+    return indexed(
+      { title: collection.title, description: collection.metaDescription },
+      collection.path,
+    );
+  // Unknown addresses still show the homepage, so they must not be indexed as pages.
+  if (route.page === 'product' || route.unknown) return { ...homeMeta, noindex: true };
+  return { ...homeMeta, canonical: `${SITE_URL}/` };
 }

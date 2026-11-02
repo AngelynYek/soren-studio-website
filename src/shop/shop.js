@@ -12,9 +12,9 @@ export function normalizeShopFilter(value) {
   return SHOP_FILTERS.some((filter) => filter.value === value) ? value : 'all';
 }
 
-export function shopHash(filter = 'all') {
+export function shopPath(filter = 'all') {
   const department = normalizeShopFilter(filter);
-  return department === 'all' ? '#shop-all' : `#shop-all?department=${department}`;
+  return department === 'all' ? '/shop-all' : `/shop-all?department=${department}`;
 }
 
 export function filterShopProducts(products, filter = 'all') {

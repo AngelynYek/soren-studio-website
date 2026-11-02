@@ -22,11 +22,11 @@ test('offers include the original homepage products and every supplied offer ima
     const featured = featuredProductsByGroup('offers');
     const photoNames = readdirSync(new URL('../src/images/offer/', import.meta.url));
 
-    assert.equal(collections.offers.hash, '#exclusive-offers');
+    assert.equal(collections.offers.path, '/exclusive-offers');
     assert.equal(collections.offers.group, 'offers');
     assert.ok(collections.offers.backLabel);
     assert.equal(
-      new Set(Object.values(collections).map((collection) => collection.hash)).size,
+      new Set(Object.values(collections).map((collection) => collection.path)).size,
       Object.keys(collections).length,
     );
     assert.deepEqual(

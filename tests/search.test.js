@@ -4,7 +4,7 @@ import {
   MAX_QUERY_LENGTH,
   cleanSearchQuery,
   createSearchIndex,
-  searchHash,
+  searchPath,
   searchProducts,
 } from '../src/search/search.js';
 
@@ -59,10 +59,10 @@ test('search cleans query whitespace, bounds length, and safely encodes search U
   assert.equal(cleanSearchQuery('  linen   shirt\n '), 'linen shirt');
   assert.equal(cleanSearchQuery(null), '');
   assert.equal(cleanSearchQuery('x'.repeat(300)).length, MAX_QUERY_LENGTH);
-  assert.equal(searchHash('  '), '#search');
-  assert.equal(searchHash('shirt & skirt?'), '#search?q=shirt%20%26%20skirt%3F');
+  assert.equal(searchPath('  '), '/search');
+  assert.equal(searchPath('shirt & skirt?'), '/search?q=shirt%20%26%20skirt%3F');
   assert.equal(
-    new URLSearchParams(searchHash('Émile linen').split('?')[1]).get('q'),
+    new URLSearchParams(searchPath('Émile linen').split('?')[1]).get('q'),
     'Émile linen',
   );
 });

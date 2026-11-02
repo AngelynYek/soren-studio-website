@@ -107,7 +107,7 @@ export function searchProducts(index, query) {
     .map((entry) => entry.product);
 }
 
-export function searchHash(query) {
+export function searchPath(query) {
   const cleaned = cleanSearchQuery(query);
-  return cleaned ? `#search?q=${encodeURIComponent(cleaned)}` : '#search';
+  return cleaned ? `/search?q=${encodeURIComponent(cleaned)}` : '/search';
 }

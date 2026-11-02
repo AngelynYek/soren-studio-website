@@ -1,4 +1,5 @@
 import React, { useEffect, useRef, useState } from 'react';
+import { navigate } from '../navigation/navigate';
 import { ArrowRight } from 'lucide-react';
 import { useAccount } from './AccountProvider';
 import './account.css';
@@ -33,7 +34,7 @@ export default function AccountPage({ mode = 'sign-in' }) {
     if (!message) {
       setName('');
       setEmail('');
-      window.location.hash = 'account';
+      navigate('/account');
     }
   };
 
@@ -43,12 +44,12 @@ export default function AccountPage({ mode = 'sign-in' }) {
     setEmail('');
     setError('');
     setStatus('You have signed out.');
-    window.location.hash = 'account';
+    navigate('/account');
   };
 
   return (
     <main className="account-page" aria-labelledby="account-title">
-      <a className="product-back" href="#">
+      <a className="product-back" href="/">
         ← Continue shopping
       </a>
       <div className="account-layout">
@@ -81,7 +82,7 @@ export default function AccountPage({ mode = 'sign-in' }) {
                   <dd>{profile.email}</dd>
                 </div>
               </dl>
-              <a className="button button-dark account-submit" href="#cart">
+              <a className="button button-dark account-submit" href="/cart">
                 View shopping bag <ArrowRight size={16} aria-hidden="true" />
               </a>
               <p className="account-help">
@@ -148,7 +149,7 @@ export default function AccountPage({ mode = 'sign-in' }) {
               </form>
               <p className="account-switch">
                 {creating ? 'Already have an account?' : 'New to Soren?'}{' '}
-                <a className="account-text-link" href={creating ? '#account' : '#account/create'}>
+                <a className="account-text-link" href={creating ? '/account' : '/account/create'}>
                   {creating ? 'Sign in' : 'Create account'}
                 </a>
               </p>

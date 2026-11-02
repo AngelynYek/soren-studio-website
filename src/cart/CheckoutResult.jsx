@@ -56,7 +56,7 @@ export default function CheckoutResult({ orderId, onShowHome }) {
         Preview checkout. No payment was collected and no items will be shipped.
       </p>
       <div className="checkout-actions">
-        <a className="button button-dark" href="#cart">
+        <a className="button button-dark" href="/cart">
           Back to bag
         </a>
         <button className="product-back" type="button" onClick={onShowHome}>

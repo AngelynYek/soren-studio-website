@@ -3,12 +3,13 @@ import { Search, X } from 'lucide-react';
 import ProductGrid from '../components/ProductGrid';
 import { products } from '../data/products';
 import { collections } from '../data/collections';
+import { navigate } from '../navigation/navigate';
 import {
   MAX_QUERY_LENGTH,
   RESULTS_PER_PAGE,
   cleanSearchQuery,
   createSearchIndex,
-  searchHash,
+  searchPath,
   searchProducts,
 } from './search';
 import './search.css';
@@ -23,7 +24,7 @@ function SearchSuggestions() {
       <ul>
         {suggestedQueries.map((query) => (
           <li key={query}>
-            <a href={searchHash(query)}>{query}</a>
+            <a href={searchPath(query)}>{query}</a>
           </li>
         ))}
       </ul>
@@ -47,18 +48,18 @@ export default function SearchPage({ query = '', onShowProduct }) {
     event.preventDefault();
     const nextQuery = cleanSearchQuery(draft);
     setDraft(nextQuery);
-    window.location.hash = searchHash(nextQuery);
+    navigate(searchPath(nextQuery));
   };
 
   const clearSearch = () => {
     setDraft('');
-    window.location.hash = searchHash('');
+    navigate(searchPath(''));
     inputRef.current?.focus({ preventScroll: true });
   };
 
   return (
     <main className="search-page" aria-labelledby="search-title">
-      <a className="product-back" href="#">
+      <a className="product-back" href="/">
         ← Continue shopping
       </a>
       <section className="search-heading">

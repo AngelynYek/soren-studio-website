@@ -22,7 +22,7 @@ test('search renders initial, matching, empty and paginated states using the rea
     assert.match(initial, /<label[^>]*for="product-search">Search products/);
     assert.match(initial, /type="search"/);
     assert.match(initial, /Popular searches/);
-    assert.match(initial, /href="#search\?q=Knitwear"/);
+    assert.match(initial, /href="\/search\?q=Knitwear"/);
     assert.doesNotMatch(initial, /pieces found|class="product-card"/);
 
     const match = render('Soren Minimalist Hobo Bag');

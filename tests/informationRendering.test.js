@@ -25,7 +25,7 @@ test('information pages render accessible headings, complete sections and workin
       assert.equal((markup.match(/<h1 /g) ?? []).length, 1);
       assert.match(markup, /<h1 id="information-title" tabindex="-1">/);
       assert.ok(markup.includes(`href="${page.link.href}"`));
-      assert.match(markup, /href="#shop-all"/);
+      assert.match(markup, /href="\/shop-all"/);
       assert.equal(
         (markup.match(/<section class="information-section"/g) ?? []).length,
         page.sections?.length ?? 0,

@@ -111,7 +111,7 @@ export default function CartPage({ onShowHome, onShowProduct, cancelled }) {
             </button>
           </section>
           <OrderSummary total={total}>
-            <a className="button button-dark cart-checkout" href="#checkout">
+            <a className="button button-dark cart-checkout" href="/checkout">
               Proceed to checkout <ArrowRight size={14} />
             </a>
             <p className="checkout-preview-note">

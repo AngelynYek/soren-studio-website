@@ -25,12 +25,12 @@ import { AccountProvider, useAccount } from './account/AccountProvider';
 import AccountPage from './account/AccountPage';
 import ProductGrid from './components/ProductGrid';
 import SearchPage from './search/SearchPage';
-import { cleanSearchQuery } from './search/search';
 import ShopAllPage from './shop/ShopAllPage';
-import { normalizeShopFilter } from './shop/shop';
-import { parseProductRoute, productHash } from './navigation/productRoutes';
+import { navigate, followInternalLink } from './navigation/navigate';
+import { productPath } from './navigation/productRoutes';
+import { legacyHashUrl, parseRoute } from './navigation/routes';
 import InformationPage from './information/InformationPage';
-import { CONTACT_EMAIL, informationPages, informationPageKey } from './information/pages';
+import { CONTACT_EMAIL, informationPages } from './information/pages';
 import { getPageMeta } from './seo/pageMeta';
 
 const photo = (id, width = 900) =>
@@ -53,17 +53,17 @@ function Header({ bagCount, onShowCollection, onShowHome }) {
   const { profile } = useAccount();
   const openSearch = () => {
     setMenuOpen(false);
-    window.location.hash = 'search';
+    navigate('/search');
     window.scrollTo(0, 0);
   };
   const openAccount = () => {
     setMenuOpen(false);
-    window.location.hash = 'account';
+    navigate('/account');
     window.scrollTo(0, 0);
   };
   const openBag = () => {
     setMenuOpen(false);
-    window.location.hash = 'cart';
+    navigate('/cart');
     window.scrollTo(0, 0);
   };
   const openCollection = (key) => {
@@ -263,13 +263,13 @@ function Footer({ onShowNewCollection, onShowHome }) {
         >
           New arrivals
         </button>
-        <a href="#shop-all">Shop all</a>
-        <a href={informationPages.story.hash}>{informationPages.story.title}</a>
+        <a href="/shop-all">Shop all</a>
+        <a href={informationPages.story.path}>{informationPages.story.title}</a>
       </div>
       <div className="footer-column">
         <h2>Client care</h2>
         {['shipping', 'faq', 'contact'].map((key) => (
-          <a key={key} href={informationPages[key].hash}>
+          <a key={key} href={informationPages[key].path}>
             {informationPages[key].title}
           </a>
         ))}
@@ -374,7 +374,7 @@ function ProductPage({
   const collection = collections[item.group];
   const goBack = () => {
     if (returnTo) {
-      window.location.hash = returnTo.hash;
+      navigate(returnTo.path);
       window.scrollTo(0, 0);
     } else if (collection) {
       onShowCollection(item.group);
@@ -466,7 +466,7 @@ function ProductPage({
             {added && (
               <p className="bag-confirmation" role="status">
                 Added to your bag.{' '}
-                <a className="view-bag" href="#cart">
+                <a className="view-bag" href="/cart">
                   View bag & checkout →
                 </a>
               </p>
@@ -483,27 +483,9 @@ function ProductPage({
 function App() {
   const { count: bagCount, add: addToBag } = useCart();
   const getCurrentRoute = () => {
-    const hash = window.location.hash;
-    const [path, query] = hash.split('?');
-    const params = new URLSearchParams(query);
-    if (path === '#cart') return { page: 'cart', cancelled: params.get('cancelled') === '1' };
-    if (path === '#checkout/success')
-      return { page: 'receipt', orderId: params.get('order') ?? '' };
-    if (path === '#checkout') return { page: 'checkout' };
-    if (path === '#account') return { page: 'account', mode: 'sign-in' };
-    if (path === '#account/create') return { page: 'account', mode: 'create' };
-    if (path === '#search') return { page: 'search', query: cleanSearchQuery(params.get('q')) };
-    if (path === '#shop-all')
-      return { page: 'shop', filter: normalizeShopFilter(params.get('department')) };
-    const pageKey = informationPageKey(path);
-    if (pageKey) return { page: 'information', pageKey };
-    const productRoute = parseProductRoute(path, params);
-    if (productRoute) return productRoute;
-    const collectionRoute = Object.keys(collections).find(
-      (key) => collections[key].hash === window.location.hash,
-    );
-    if (collectionRoute) return { page: collectionRoute };
-    return { page: 'home' };
+    const legacyUrl = legacyHashUrl(window.location);
+    if (legacyUrl) window.history.replaceState(null, '', legacyUrl);
+    return parseRoute(window.location.pathname + window.location.search);
   };
   const [route, setRoute] = useState(getCurrentRoute);
   useEffect(() => {
@@ -512,20 +494,24 @@ function App() {
       setRoute(nextRoute);
       if (utilityPages.has(nextRoute.page)) window.scrollTo(0, 0);
     };
-    window.addEventListener('hashchange', syncRoute);
-    return () => window.removeEventListener('hashchange', syncRoute);
+    window.addEventListener('popstate', syncRoute);
+    document.addEventListener('click', followInternalLink);
+    return () => {
+      window.removeEventListener('popstate', syncRoute);
+      document.removeEventListener('click', followInternalLink);
+    };
   }, []);
   const showCollection = (key) => {
-    window.location.hash = collections[key].hash;
+    navigate(collections[key].path);
     window.scrollTo(0, 0);
   };
   const showNewCollection = () => showCollection('autumn');
   const showHome = () => {
-    window.location.hash = '';
+    navigate('/');
     window.scrollTo(0, 0);
   };
   const showProduct = (slug, shopFilter) => {
-    window.location.hash = productHash(slug, shopFilter);
+    navigate(productPath(slug, shopFilter));
     window.scrollTo(0, 0);
   };
   const renderUtilityPage = () => {
@@ -622,6 +608,8 @@ function App() {
       <Helmet>
         <title>{meta.title}</title>
         <meta name="description" content={meta.description} />
+        {meta.canonical && <link rel="canonical" href={meta.canonical} />}
+        {meta.noindex && <meta name="robots" content="noindex" />}
       </Helmet>
       {renderPage()}
     </>

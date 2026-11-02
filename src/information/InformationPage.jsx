@@ -53,7 +53,7 @@ export default function InformationPage({ pageKey }) {
           <a className="button button-dark" href={page.link.href}>
             {page.link.label} <ArrowRight size={14} aria-hidden="true" />
           </a>
-          <a className="product-back" href="#shop-all">
+          <a className="product-back" href="/shop-all">
             ← Back to shop all
           </a>
         </div>

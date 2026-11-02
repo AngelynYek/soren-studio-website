@@ -7,9 +7,10 @@ import {
   filterShopProducts,
   getShopCounts,
   normalizeShopFilter,
-  shopHash,
+  shopPath,
 } from './shop';
 import './shop.css';
+import { navigate } from '../navigation/navigate';
 
 const counts = getShopCounts(products);
 
@@ -22,7 +23,7 @@ function ShopResults({ items, onShowProduct }) {
       <div className="shop-empty">
         <h2>No pieces in this edit yet.</h2>
         <p>Explore the full collection to find your next everyday piece.</p>
-        <a className="button button-dark" href={shopHash()}>
+        <a className="button button-dark" href={shopPath()}>
           View all pieces
         </a>
       </div>
@@ -86,7 +87,7 @@ export default function ShopAllPage({ filter = 'all', onShowProduct }) {
                     value={option.value}
                     checked={activeFilter === option.value}
                     onChange={() => {
-                      window.location.hash = shopHash(option.value);
+                      navigate(shopPath(option.value));
                     }}
                   />
                   <span>

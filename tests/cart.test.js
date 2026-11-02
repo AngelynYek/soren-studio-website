@@ -57,3 +57,24 @@ test('prices use integer minor units with explicit MYR formatting', () => {
   );
   assert.throws(() => priceInMinorUnits('RM -1'));
 });
+
+test('a bag saved by another tab replaces this tab so its next save keeps both changes', () => {
+  const findProduct = (slug) => ({ slug, sizes: [], price: 'RM 10' });
+  const staleTab = cartReducer(emptyCart, {
+    type: 'add',
+    line: { slug: 'belt', size: '', quantity: 1 },
+  });
+  const otherTab = JSON.stringify({
+    items: [{ slug: 'coat', size: '', quantity: 1 }],
+    lastOrder: null,
+  });
+  const synced = cartReducer(staleTab, {
+    type: 'restore',
+    state: restoreCart(otherTab, findProduct),
+  });
+  const next = cartReducer(synced, { type: 'add', line: { slug: 'hat', size: '', quantity: 1 } });
+  assert.deepEqual(
+    next.items.map(({ slug }) => slug),
+    ['coat', 'hat'],
+  );
+});

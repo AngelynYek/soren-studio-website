@@ -92,8 +92,45 @@ test('menswear queries do not accidentally match women and possessives use the s
     assert.deepEqual(slugs(query), ['cotton-shirt', 'linen-shirt']);
   }
   for (const query of ['women', 'womens', "women's"]) {
-    assert.deepEqual(slugs(query), ['wool-dress']);
+    assert.deepEqual(slugs(query), ['wool-dress', 'autumn-knit']);
   }
+});
+
+test('plural queries find singular words and sweaters include knitwear and sweater dresses', () => {
+  const pieces = [
+    { slug: 'chain', name: 'Solene Necklace', group: 'accessories', category: 'Jewellery' },
+    { slug: 'crew', name: 'Remy Crew Knit', group: 'autumn', category: 'Knitwear' },
+    { slug: 'freja', name: 'Freja Sweater Dress', group: 'offers', category: 'Dresses' },
+    {
+      slug: 'suit',
+      name: 'Adrienne Suit',
+      group: 'offers',
+      category: 'Sets',
+      fit: 'Quiet presence',
+    },
+  ];
+  const index = createSearchIndex(pieces, collections);
+  const find = (query) =>
+    searchProducts(index, query)
+      .map(({ slug }) => slug)
+      .sort();
+  assert.deepEqual(find('necklaces'), ['chain']);
+  assert.deepEqual(find('sweaters'), ['crew', 'freja']);
+  assert.deepEqual(find('jumper'), ['crew']);
+  assert.deepEqual(find('sweater dress'), ['freja']);
+  assert.deepEqual(find('press'), []);
+});
+
+test('department searches match Shop all for pieces in editorial collections', () => {
+  const editorial = [
+    { slug: 'mens-offer', name: 'Polo', group: 'offers', sizeProfile: 'men', category: 'Tops' },
+    { slug: 'womens-offer', name: 'Top', group: 'offers', sizeProfile: 'women', category: 'Tops' },
+    { slug: 'bag-offer', name: 'Bag', group: 'offers', category: 'Bags' },
+  ];
+  const index = createSearchIndex(editorial, collections);
+  const find = (query) => searchProducts(index, query).map(({ slug }) => slug);
+  assert.deepEqual(find('men'), ['mens-offer']);
+  assert.deepEqual(find('women'), ['womens-offer']);
 });
 
 test('blank, punctuation-only and unknown searches return no matches without mutating the catalog', () => {

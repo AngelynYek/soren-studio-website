@@ -4,6 +4,7 @@ Soren Studio is a personal fashion website inspired by timeless clothing, soft n
 minimal shopping experience. Browse the collections, explore each piece and try a complete shopping journey, from choosing a size to viewing an order confirmation.
 
 This is a practice project, not a real shop. No payments are collected and no products are shipped.
+Images are used for non-commercial and educational purposes. All rights belong to their respective owners.
 
 ## Explore the website
 
@@ -69,8 +70,7 @@ If port 5173 is already in use, stop the other development or preview server and
 
 ## For people editing the project
 
-The website uses React for its interactive pages, Vite to run and build it, plain CSS for styling and
-Lucide for icons.
+The website uses React for its interactive pages, Vite to run and build it, plain CSS for styling and Lucide for icons.
 
 - `src/data/` contains product details, collection settings and size guides.
 - `src/images/` contains the local product photos.
